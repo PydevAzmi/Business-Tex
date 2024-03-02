@@ -23,6 +23,7 @@ from .settings import MEDIA_ROOT
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("business.urls", namespace="business")),
+    path("auth", include("accounts.urls", namespace="accounts")),
 ]
 
 if settings.DEBUG:

@@ -5,10 +5,10 @@ from django.utils.text import slugify
 
 # Create your models here.
 UNIT_TYPE = (
-    (_("Cartoon"), _("Cartoon")),
-    (_("Bag"), _("Bag")),
-    (_("Box"), _("Box")),
-    (_("Pieces"), _("Pieces")),
+    (("Cartoon"), _("Cartoon")),
+    (("Bag"), _("Bag")),
+    (("Box"), _("Box")),
+    (("Pieces"), _("Pieces")),
 )
 
 class Yarn(models.Model):
