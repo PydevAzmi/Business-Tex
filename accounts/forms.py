@@ -2,6 +2,9 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from allauth.account.forms import SignupForm
 from django import forms
+from django.contrib.auth.forms import UserChangeForm
+
+custom_user = get_user_model()
 
 class CustomUserCreationForm(SignupForm):
     phone_number = forms.CharField(
@@ -22,8 +25,9 @@ class CustomUserCreationForm(SignupForm):
         user.phone_number = self.cleaned_data.get('phone_number')
         user.save()
         return user
+    
     class Meta:
-        model = get_user_model()
+        model = custom_user
         fields = (
             "email",
             "username",

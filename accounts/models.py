@@ -29,7 +29,7 @@ class Location(models.Model):
 class User(AbstractUser, Location):
     email = models.EmailField(_("Email"), max_length=254, unique=True)
     phone_number = models.CharField(_("Phone Number"), max_length=13 )
-    wa_phone = models.CharField(_("Whatsapp Phone Number"), max_length=11, unique=True) 
+    wa_phone = models.CharField(_("Whatsapp Phone Number"), max_length=13) 
     profile_image = models.ImageField(_("Profile Image"),upload_to=profile_image_path, null=True,blank=True)
     
     USERNAME_FIELD = "email"
@@ -49,8 +49,8 @@ class Person(Location):
     owner = models.ForeignKey(User, verbose_name=_("Owner"), on_delete=models.CASCADE)
     name = models.CharField(_("Name"),max_length=150)
     email =models.EmailField(_("Email"), max_length=254, null=True, blank=True)
-    phone_number = models.CharField(_("Phone Number"), max_length=150)
-    wa_phone = models.CharField(_("Whatsapp Phone Number"), max_length=11, unique=True) 
+    phone_number = models.CharField(_("Phone Number"), max_length=13)
+    wa_phone = models.CharField(_("Whatsapp Phone Number"), max_length=13) 
     role = models.CharField(_("Role"), max_length=50, choices=SYSTEM_ROLES )
 
     class Meta:
@@ -69,8 +69,8 @@ class Company(Location):
     owner = models.ForeignKey(User, verbose_name=_("Owner"), on_delete=models.CASCADE )
     name = models.CharField(_("Name"),max_length=150)
     email = models.EmailField(_("Email"), max_length=254, null=True, blank=True)
-    phone_number = models.CharField(_("Phone Number"), max_length=150)
-    wa_phone = models.CharField(_("Whatsapp Phone Number"), max_length=11, unique=True) 
+    phone_number = models.CharField(_("Phone Number"), max_length=13)
+    wa_phone = models.CharField(_("Whatsapp Phone Number"), max_length=13) 
     logo = models.ImageField(_("Logo"), upload_to=company_logo_path  )
     bio = models.CharField(_("Bio"), max_length=50, null=True, blank=True)
 
