@@ -34,16 +34,22 @@ INSTALLED_APPS = [
     # custom accounts system
     "accounts",
 
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 
     # my_apps
     "business",
-    
+
+    'allauth',
+    'allauth.account',
+    "crispy_forms", 
+    "crispy_bootstrap5", 
 ]
 
 MIDDLEWARE = [
@@ -54,6 +60,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -69,11 +78,15 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
-
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5" 
+CRISPY_TEMPLATE_PACK = "bootstrap5" 
 WSGI_APPLICATION = "project.wsgi.application"
 
 
@@ -91,7 +104,6 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'accounts.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -135,3 +147,28 @@ MEDIA_ROOT  = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# django-allauth config
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT = "/" 
+AUTH_USER_MODEL = 'accounts.User'
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomUserCreationForm'}
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ACCOUNT_SESSION_REMEMBER = True  
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False  
+ACCOUNT_USERNAME_REQUIRED = True  
+ACCOUNT_AUTHENTICATION_METHOD = "email"  
+ACCOUNT_EMAIL_REQUIRED = True  
+ACCOUNT_UNIQUE_EMAIL = True  
