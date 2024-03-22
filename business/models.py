@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 import uuid
 from accounts.models import Person
 from django.contrib.auth import get_user_model
@@ -66,28 +67,27 @@ class Fabric(models.Model):
 class Weight(models.Model):
     total_weight=models.DecimalField(_("total weight"), max_digits=10, decimal_places=2)
     unit_type=models.CharField(_("unit type"), max_length=50, choices=UNIT_TYPE, null=True, blank=True)
-    quantity_per_unit=models.IntegerField(_("quantity per type"), null=True, blank =True)
+    quantity_per_unit=models.IntegerField(_("quantity per type"), null=True, blank=True)
     notes=models.TextField(_("notes"), null=True, blank=True)
 
     class Meta:
-        abstract =True  
+        abstract=True  
 
 
 class Price(models.Model):
-    unit_price=models.DecimalField(_("unit price"), max_digits=10, decimal_places=2, null=True, blank =True)
-    total_price=models.DecimalField(_("total price"), max_digits=10, decimal_places=2)
-    added_tax =models.DecimalField(_("added tax"), max_digits=10, decimal_places=2, null=True, blank=True)
+    unit_price=models.DecimalField(_("unit price"), max_digits=10, decimal_places=2, null=True, blank=True)
+    total_price=models.DecimalField(_("total price"), max_digits=10, decimal_places=2, null=True, blank=True)
+    added_tax=models.DecimalField(_("added tax"), max_digits=10, decimal_places=2, null=True, blank=True)
     discount=models.DecimalField(_("discount"), max_digits=10, decimal_places=2, null=True, blank=True)
 
     class Meta:
-        abstract =True  
+        abstract=True  
 
 class YarnInventory(Weight, Price):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     yarn=models.ForeignKey(Yarn, verbose_name=_("yarn"), on_delete=models.CASCADE)
     owner=models.ForeignKey(User, verbose_name=_("owner"), on_delete=models.CASCADE)
     supplier=models.ForeignKey(Person, verbose_name=_("supplier"), on_delete=models.CASCADE)
-    existing_weight=models.DecimalField(_("actual existing weight"), max_digits=10, decimal_places=2)
     recieved_at=models.DateTimeField(_("received at"))
     located_at=models.CharField(_("located at"), max_length=50, null=True, blank=True)
     status=models.CharField(_("status"), max_length=50, choices=STATUS, null=True, blank=True)
@@ -96,12 +96,16 @@ class YarnInventory(Weight, Price):
         verbose_name=_("Yarn In Stock")
         verbose_name_plural=_("Yarns In Stock")
 
-    def __str__(self):
-        return f"{self.yarn} -> {self.supplier} -> {self.total_weight} kg, Exist {self.existing_weight} kg"
-
     def get_absolute_url(self):
         return reverse("YarnInventory_detail", kwargs={"pk":self.id})
     
+    def get_existing_weight(self):
+        total_out=self.yarnfactory_set.aggregate(total_manufactured=Sum('total_weight'))['total_manufactured'] or 0 # type:ignore
+        total_out += self.soldyarn_set.aggregate(total_sold=Sum('total_weight'))['total_sold'] or 0 # type:ignore
+        return self.total_weight - total_out
+    
+    def __str__(self):
+        return f"{self.yarn} -> {self.supplier} -> {self.total_weight} kg, Exist {self.get_existing_weight()} kg"
 
 class SoldYarn(Weight, Price):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -145,36 +149,31 @@ class YarnFactory(Weight):
     
     def save(self, *args, **kwargs ):
         yarn_inv=self.yarn_inventory
-        yarn_factories=YarnFactory.objects.filter(yarn_inventory=yarn_inv).all()
-        for yarn_f in yarn_factories:
-            if yarn_f == self:
-                yarn_inv.existing_weight=yarn_inv.total_weight - self.total_weight
-            else:
-                yarn_inv.existing_weight -= yarn_f.total_weight
-        yarn_inv.save()
-        
-        if FabricInventory.objects.filter(yarn_factory=self, fabric=self.manufactured_fabric, supplier=self.factory).exists():
-            print("exist")
-            super(YarnFactory, self).save(*args, **kwargs)
-        else:
+        fabric_inventory=FabricInventory.objects.filter(
+            owner=yarn_inv.owner,
+            yarn_factory=self,
+            supplier=self.factory,
+            )
+        if not fabric_inventory.exists():
             fabric_inventory=FabricInventory.objects.create(
                 owner=yarn_inv.owner,
                 fabric=self.manufactured_fabric,
+                quantity_recieved=0,
                 supplier=self.factory,
                 located_at=self.factory.name,    
                 status="In Production",
-                total_weight=self.fabric_weight,
+                total_weight=0,
                 unit_type="Pieces",
                 )
             super(YarnFactory, self).save(*args, **kwargs)
             fabric_inventory.yarn_factory=self
+            if self.fabric_weight:
+                fabric_inventory.total_weight=self.fabric_weight
             fabric_inventory.save()
-        
 
 class ReturnedYarn(Weight):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     yarn_factory=models.ForeignKey(YarnFactory, verbose_name=_("Yarn in Factory"), on_delete=models.CASCADE)
-    factory=models.ForeignKey(Person, verbose_name=_("Factory"), on_delete=models.CASCADE)
     returned_at=models.DateTimeField(_("Returned At"))
     status=models.CharField(_("Status"), max_length=50, choices=RETURNED_STATUS, null=True, blank=True)
 
@@ -183,7 +182,7 @@ class ReturnedYarn(Weight):
         verbose_name_plural=_("Returned Yarns")
 
     def __str__(self):
-        return f"{self.yarn_factory.yarn_inventory} from {self.factory}"
+        return f"{self.total_weight}kg {self.yarn_factory.yarn_inventory.yarn} from {self.yarn_factory.factory.name}"
 
     def get_absolute_url(self):
         return reverse("ReturnedYarn_detail", kwargs={"pk":self.id})
@@ -195,7 +194,6 @@ class FabricInventory(Weight, Price):
     fabric=models.ForeignKey(Fabric, verbose_name=_("Faric"), on_delete=models.SET_NULL, null=True, blank=True)
     supplier=models.ForeignKey(Person, verbose_name=_("Factory or Supplier"), on_delete=models.CASCADE)
     yarn_factory=models.ForeignKey(YarnFactory, verbose_name=_("Yarn Factory"), on_delete=models.SET_NULL, null=True, blank=True)
-    existing_weight=models.DecimalField(_("Actual weight"), max_digits=10, decimal_places=2, null=True, blank=True)
     quantity_recieved=models.DecimalField(_("received weight"), max_digits=5, decimal_places=2, null=True, blank=True)
     quantity_remaining=models.DecimalField(_("remaining weight"), max_digits=5, decimal_places=2, null=True, blank=True)
     quantity_out_dyeing=models.DecimalField(_("out dyeing weight"), max_digits=5, decimal_places=2, null=True, blank=True)
@@ -209,6 +207,12 @@ class FabricInventory(Weight, Price):
         verbose_name=_("Fabric In Stock")
         verbose_name_plural=_("Fabrics In Stock")
 
+    def get_existing_weight(self):
+        total_out=self.fabricdyeingfactory_set.aggregate(total_produced=Sum('total_weight'))['total_produced'] or 0 # type:ignore
+        total_out += self.soldfabric_set.aggregate(total_sold=Sum('total_weight'))['total_sold'] or 0 # type:ignore
+        total_out += self.returnedfabric_set.aggregate(total_returned=Sum('total_weight'))['total_returned'] or 0 # type:ignore
+        return self.total_weight - total_out
+
     def __str__(self):
         return f"{self.total_weight} kg {self.fabric} - {self.supplier}"
 
@@ -219,19 +223,18 @@ class FabricInventory(Weight, Price):
 class ReturnedFabric(Weight):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     fabric_inventory=models.ForeignKey(FabricInventory, verbose_name=_("Fabric Inventory"), on_delete=models.CASCADE)
-    factory=models.ForeignKey(Person, verbose_name=_("Factory"), on_delete=models.CASCADE)
     returned_at=models.DateTimeField(_("Returned At"))
     status=models.CharField(_("Status"), max_length=50, choices=RETURNED_STATUS, null=True, blank=True)
 
     class Meta:
         verbose_name=_("Returned Fabric")
-        verbose_name_plural=_("Returned Farics")
+        verbose_name_plural=_("Returned Fabrics")
 
     def __str__(self):
-        return f"{self.fabric_inventory} {self.total_weight}"
+        return f"{self.total_weight} to {self.fabric_inventory.supplier.name}"
 
     def get_absolute_url(self):
-        return reverse("ReturnedFaric_detail", kwargs={"pk":self.id})
+        return reverse("ReturnedFabric_detail", kwargs={"pk":self.id})
 
 
 class FabricDyeingFactory(Weight):
@@ -246,6 +249,25 @@ class FabricDyeingFactory(Weight):
 
     def __str__(self):
         return self.fabric_inv
+    
+    def save(self, *args, **kwargs ):
+        d_fabric_inventory=FabricDyeingInventory.objects.filter(
+                fabric_dyeing_factory=self,
+                owner=self.fabric_inv.owner,
+                supplier=self.dyeing_factory,
+            )
+        if not d_fabric_inventory.exists():
+            d_fabric_inventory=FabricDyeingInventory.objects.create(
+                owner=self.fabric_inv.owner,
+                fabric=self.fabric_inv.fabric,
+                supplier=self.dyeing_factory,
+                located_at=self.dyeing_factory.name, 
+                status="In Dyeing",
+                total_weight=0,
+                )
+            super(FabricDyeingFactory, self).save(*args, **kwargs)
+            fabric_dyeing_factory=self
+            fabric_dyeing_factory.save()
 
     def get_absolute_url(self):
         return reverse("FabricDyeingFactory_detail", kwargs={"pk":self.id})
@@ -255,20 +277,26 @@ class FabricDyeingInventory(Weight, Price):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner=models.ForeignKey(User, verbose_name=_("Owner"), on_delete=models.CASCADE)
     fabric=models.ForeignKey(Fabric, verbose_name=_("Fabric"), on_delete=models.CASCADE)
-    fabric_dyeing_factory=models.ForeignKey(Person, verbose_name=_("Factory or Supplier"), on_delete=models.CASCADE)
-    existing_weight=models.DecimalField(_("Actual weight"), max_digits=5, decimal_places=2)
+    supplier=models.ForeignKey(Person, verbose_name=_("Supplier"), on_delete=models.CASCADE)
+    fabric_dyeing_factory=models.ForeignKey(FabricDyeingFactory, verbose_name=_("Supplier"), on_delete=models.CASCADE, null=True, blank=True)
     quantity_recieved=models.DecimalField(_("received weight"), max_digits=5, decimal_places=2, null=True, blank=True)
     quantity_remaining=models.DecimalField(_("Remaining weight"), max_digits=5, decimal_places=2, null=True, blank=True)
     quantity_buyied=models.DecimalField(_("buyied"), max_digits=5, decimal_places=2, null=True, blank=True)
     recieved_at=models.DateTimeField(_("received At"), auto_now=False, auto_now_add=False)
     status=models.CharField(_("Status"), max_length=50, choices=STATUS, null=True, blank=True)
+    located_at=models.CharField(_("located at"), max_length=50, null=True, blank=True)
 
     class Meta:
         verbose_name=_("Dyed fabric in stock")
         verbose_name_plural=_("Dyed fabrics in stock")
-
+    
+    def get_existing_weight(self):
+        total_out = self.soldfabric_set.aggregate(total_sold=Sum('total_weight'))['total_sold'] or 0 # type:ignore
+        self.quantity_buyied = self.total_weight - total_out
+        return self.quantity_buyied
+    
     def __str__(self):
-        return f"{self.existing_weight} {self.fabric_dyeing_factory} {self.quantity_recieved}"
+        return f"{self.fabric_dyeing_factory} {self.quantity_recieved}"
 
     def get_absolute_url(self):
         return reverse("FabricDyeingInventory_detail", kwargs={"pk":self.id})
