@@ -74,7 +74,12 @@
                         <div class="user-container d-flex">
                             <a href="#" class="d-flex user fixed-relative" data-bs-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
-                                <img class="profile" alt="profile" src="{% static 'img/profile/profile-8.jpg' %}" />
+                                {% if user.profile_image %}
+                                <img class="profile" alt="profile" src={{user.profile_image.url}} />
+                                {% else %}
+                                <img class="profile" alt="profile" src="{% static 'img/profile/profile-11.jpg' %}" />
+                                {% endif %}
+
                                 <div class="name">{{user.username}}</div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end user-menu wide">
@@ -175,7 +180,7 @@
                     <div class="menu-container flex-grow-1">
                         <ul id="menu" class="menu">
                             <li>
-                                <a href="Dashboard.html">
+                                <a href="/admin">
                                     <i data-cs-icon="shop" class="icon" data-cs-size="18"></i>
                                     <span class="label">Dashboard</span>
                                 </a>
@@ -187,13 +192,13 @@
                                 </a>
                                 <ul id="products">
                                     <li>
-                                        <a href="Products.List.html">
-                                            <span class="label">List</span>
+                                        <a href="#">
+                                            <span class="label">Yarn</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Products.Detail.html">
-                                            <span class="label">Detail</span>
+                                        <a href="#">
+                                            <span class="label">Fabric</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -201,17 +206,22 @@
                             <li>
                                 <a href="#orders" data-href="Orders.html">
                                     <i data-cs-icon="cart" class="icon" data-cs-size="18"></i>
-                                    <span class="label">Orders</span>
+                                    <span class="label">Sales</span>
                                 </a>
                                 <ul id="orders">
                                     <li>
                                         <a href="Orders.List.html">
-                                            <span class="label">List</span>
+                                            <span class="label">Yarn</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="Orders.Detail.html">
-                                            <span class="label">Detail</span>
+                                            <span class="label">Raw Fabric</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="Orders.Detail.html">
+                                            <span class="label">Dyied Fabric</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -219,17 +229,27 @@
                             <li>
                                 <a href="#customers" data-href="Customers.html">
                                     <i data-cs-icon="user" class="icon" data-cs-size="18"></i>
-                                    <span class="label">Customers</span>
+                                    <span class="label">Work Agencies</span>
                                 </a>
                                 <ul id="customers">
                                     <li>
                                         <a href="Customers.List.html">
-                                            <span class="label">List</span>
+                                            <span class="label">Customers</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="Customers.List.html">
+                                            <span class="label">Suppliers</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="Customers.List.html">
+                                            <span class="label">Factories</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="Customers.Detail.html">
-                                            <span class="label">Detail</span>
+                                            <span class="label">Dyeing Factories</span>
                                         </a>
                                     </li>
                                 </ul>

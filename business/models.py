@@ -95,6 +95,7 @@ class YarnInventory(Weight, Price):
     class Meta:
         verbose_name=_("Yarn In Stock")
         verbose_name_plural=_("Yarns In Stock")
+        ordering = ["-recieved_at"]
 
     def get_absolute_url(self):
         return reverse("YarnInventory_detail", kwargs={"pk":self.id})
@@ -105,7 +106,7 @@ class YarnInventory(Weight, Price):
         return self.total_weight - total_out
     
     def __str__(self):
-        return f"{self.yarn} -> {self.supplier} -> {self.total_weight} kg, Exist {self.get_existing_weight()} kg"
+        return f"{self.yarn} ({self.total_weight} kg)"
 
 class SoldYarn(Weight, Price):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -214,7 +215,7 @@ class FabricInventory(Weight, Price):
         return self.total_weight - total_out
 
     def __str__(self):
-        return f"{self.total_weight} kg {self.fabric} - {self.supplier}"
+        return f"{self.get_existing_weight() } kg {self.fabric} - {self.supplier}"
 
     def get_absolute_url(self):
         return reverse("FabricInventory_detail", kwargs={"pk":self.id})
@@ -248,7 +249,7 @@ class FabricDyeingFactory(Weight):
         verbose_name_plural=_("Fabrics went for Dyeing Factories")
 
     def __str__(self):
-        return f"{self.fabric_inv}"
+        return f"{self.fabric_inv.fabric} to {self.dyeing_factory}"
     
     def save(self, *args, **kwargs ):
         d_fabric_inventory=FabricDyeingInventory.objects.filter(
@@ -296,7 +297,7 @@ class FabricDyeingInventory(Weight, Price):
         return self.total_weight - total_out
     
     def __str__(self):
-        return f"{self.fabric_dyeing_factory}"
+        return f"{self.get_existing_weight()}kg {self.fabric} from {self.supplier}"
 
     def get_absolute_url(self):
         return reverse("FabricDyeingInventory_detail", kwargs={"pk":self.id})
