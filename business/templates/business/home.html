@@ -376,6 +376,7 @@
                                         <tr>
                                             <th class="text-muted text-small text-uppercase">Name</th>
                                             <th class="text-muted text-small text-uppercase">Total Price</th>
+                                            <th class="text-muted text-small text-uppercase">Weight</th>
                                             <th class="text-muted text-small text-uppercase">Customer</th>
                                             <th class="text-muted text-small text-uppercase">Category</th>
                                             <th class="text-muted text-small text-uppercase">date</th>
@@ -385,15 +386,17 @@
                                         {% for sold_fabric in  sold_fabrics %}                                                                    
                                         <tr>
                                             {% if sold_fabric.fabric_dyeing_inventory %}
-                                            <td>{{sold_fabric.fabric_dyeing_inventory.fabric}}</td>
+                                            <td>{{sold_fabric.fabric_dyeing_inventory.fabric|truncatechars:15}}</td>
                                             <td class="text-alternate">{{sold_fabric.total_price}}</td>
-                                            <td class="text-alternate">{{sold_fabric.customer.name}}</td>
+                                            <td class="text-alternate">{{sold_fabric.total_weight}}</td>
+                                            <td class="text-alternate">{{sold_fabric.customer.name|truncatechars:15}}</td>
                                             <td class="text-alternate">Dyed Fabric</td>
                                             <td class="text-alternate">{{sold_fabric.sold_at|date:"H:m D d M "}}</td>
                                             {% else %}
-                                            <td>{{sold_fabric.Fabric_Inventory.fabric}}</td>
+                                            <td>{{sold_fabric.Fabric_Inventory.fabric|truncatechars:15}}</td>
                                             <td class="text-alternate">{{sold_fabric.total_price}}</td>
-                                            <td class="text-alternate">{{sold_fabric.customer.name}}</td>
+                                            <td class="text-alternate">{{sold_fabric.total_weight}}</td>
+                                            <td class="text-alternate">{{sold_fabric.customer.name|truncatechars:15}}</td>
                                             <td class="text-alternate">Raw Fabric</td>
                                             <td class="text-alternate">{{sold_fabric.sold_at|date:"H:m D d M "}}</td>
                                             {% endif %}

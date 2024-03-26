@@ -192,12 +192,12 @@
                                 </a>
                                 <ul id="products">
                                     <li>
-                                        <a href="#">
+                                        <a href="{% url 'business:yarn_list' %}">
                                             <span class="label">Yarn</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{% url 'business:fabric_list' %}">
                                             <span class="label">Fabric</span>
                                         </a>
                                     </li>
@@ -597,8 +597,6 @@
     <script src="{% static 'js/vendor/OverlayScrollbars.min.js' %}"></script>
     <script src="{% static 'js/vendor/autoComplete.min.js' %}"></script>
     <script src="{% static 'js/vendor/clamp.min.js' %}"></script>
-    <script src="{% static 'js/vendor/Chart.bundle.min.js' %}"></script>
-    <script src="{% static 'js/vendor/chartjs-plugin-rounded-bar.min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery.barrating.min.js' %}"></script>
     <!-- Vendor Scripts End -->
 
