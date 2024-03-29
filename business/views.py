@@ -3,7 +3,9 @@ from django.urls import reverse_lazy, reverse
 from .models import *
 from .forms import YarnForm, FabricForm
 from django.views import View
+
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 @login_required
@@ -25,11 +27,11 @@ def home(request):
     return render(request, "business/home.html",context)
 
 
-class YarnList(View):
+class YarnList(LoginRequiredMixin, View):
     def get(self, request):
         form = YarnForm()
-        yarn_list = Yarn.objects.filter(owner = request.user).all()
-        return render(request,  "business/list_yarn.html", {'yarn_list': yarn_list, "form": form})
+        yarn_list = Yarn.objects.filter(owner=request.user).all()
+        return render(request, "business/products/list_yarn.html", {'yarn_list': yarn_list, "form": form})
 
     def post(self, request):
         form = YarnForm(request.POST)
@@ -37,22 +39,40 @@ class YarnList(View):
             myform = form.save(commit=False)
             myform.owner = request.user
             myform.save()
-        return redirect("business:yarn_list")
+            return redirect("business:yarn_list")
+        else:
+            yarn_list = Yarn.objects.filter(owner=request.user).all()
+            return render(request, "business/products/list_yarn.html", {'yarn_list': yarn_list, "form": form})
 
-    def update(self, request, pk):
-        instance = get_object_or_404(Yarn, pk=pk)
-        form = YarnForm(request.POST,instance = instance)
+class YarnDetail(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        yarn = get_object_or_404(Yarn, owner=request.user, id = pk)
+        form = YarnForm(instance=yarn)
+        return render(request, "business/products/yarn_detail.html", {"form": form})
+        
+    def post(self, request, pk):
+        yarn = get_object_or_404(Yarn, owner=request.user, id = pk)
+        form = YarnForm(request.POST, instance=yarn)
         if form.is_valid():
             form.save()
             return redirect("business:yarn_list")
-        return render(request,  "business/list_yarn.html", {"form": form})
-        
+        else:
+            yarn = get_object_or_404(Yarn, owner=request.user, id = pk)
+            form = YarnForm(request.POST, instance=yarn)
+            return render(request, "business/products/yarn_detail.html", {"form": form})
 
-class FabricList(View):
+class YarnDelete(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        yarn = get_object_or_404(Yarn, owner=request.user, id = pk)
+        yarn.delete()
+        return redirect("business:yarn_list")
+
+
+class FabricList(LoginRequiredMixin, View):
     def get(self, request):
         form = FabricForm()
         fabric_list = Fabric.objects.filter(owner = request.user).all()
-        return render(request,  "business/list_fabric.html", {'fabric_list': fabric_list, "form": form}) 
+        return render(request,  "business/products/list_fabric.html", {'fabric_list': fabric_list, "form": form}) 
     
 
     def post(self, request):
@@ -62,3 +82,29 @@ class FabricList(View):
             myform.owner = request.user
             myform.save()
         return redirect("business:fabric_list")
+        
+        
+class FabricDetail(LoginRequiredMixin,View):
+    def get(self, request, pk):
+        fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
+        form = FabricForm(instance=fabric)
+        return render(request, "business/products/fabric_detail.html", {"form": form})
+        
+    def post(self, request, pk):
+        fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
+        form = FabricForm(request.POST, instance=fabric)
+        if form.is_valid():
+            form.save()
+            return redirect("business:fabric_list")
+        else:
+            fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
+            form = FabricForm(request.POST, instance=fabric)
+            return render(request, "business/products/fabric_detail.html", {"form": form})
+
+class FabricDelete(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
+        fabric.delete()
+        return redirect("business:fabric_list")
+
+

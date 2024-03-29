@@ -44,7 +44,7 @@ class Yarn(models.Model):
         return f"{self.name} {self.yarn_type}"
 
     def get_absolute_url(self):
-        return reverse("Yarn_detail", kwargs={"pk":self.id})
+        return reverse("business:Yarn_detail", kwargs={"pk":self.id})
 
 
 class Fabric(models.Model):
@@ -61,7 +61,7 @@ class Fabric(models.Model):
         return f"{self.name} {self.fabric_type}"
 
     def get_absolute_url(self):
-        return reverse("Fabric_detail", kwargs={"pk":self.id})
+        return reverse("business:Fabric_detail", kwargs={"pk":self.id})
         
 
 class Weight(models.Model):
@@ -98,7 +98,7 @@ class YarnInventory(Weight, Price):
         ordering = ["-recieved_at"]
 
     def get_absolute_url(self):
-        return reverse("YarnInventory_detail", kwargs={"pk":self.id})
+        return reverse("business:YarnInventory_detail", kwargs={"pk":self.id})
     
     def get_existing_weight(self):
         total_out=self.yarnfactory_set.aggregate(total_manufactured=Sum('total_weight'))['total_manufactured'] or 0 # type:ignore
@@ -124,7 +124,7 @@ class SoldYarn(Weight, Price):
         return f"{self.total_weight} kg {self.yarn_inventory.yarn} buyed to {self.customer}"
 
     def get_absolute_url(self):
-        return reverse("SoldYarn_detail", kwargs={"pk":self.id})
+        return reverse("business:SoldYarn_detail", kwargs={"pk":self.id})
 
 
 class YarnFactory(Weight):
@@ -146,7 +146,7 @@ class YarnFactory(Weight):
         return f"{self.total_weight} kg > {self.yarn_inventory.yarn} to {self.factory}"
 
     def get_absolute_url(self):
-        return reverse("YarnFactory_detail", kwargs={"pk":self.id})
+        return reverse("business:YarnFactory_detail", kwargs={"pk":self.id})
     
     def save(self, *args, **kwargs ):
         yarn_inv=self.yarn_inventory
@@ -186,7 +186,7 @@ class ReturnedYarn(Weight):
         return f"{self.total_weight}kg {self.yarn_factory.yarn_inventory.yarn} from {self.yarn_factory.factory.name}"
 
     def get_absolute_url(self):
-        return reverse("ReturnedYarn_detail", kwargs={"pk":self.id})
+        return reverse("business:ReturnedYarn_detail", kwargs={"pk":self.id})
 
 
 class FabricInventory(Weight, Price):
@@ -218,7 +218,7 @@ class FabricInventory(Weight, Price):
         return f"{self.get_existing_weight() } kg {self.fabric} - {self.supplier}"
 
     def get_absolute_url(self):
-        return reverse("FabricInventory_detail", kwargs={"pk":self.id})
+        return reverse("business:FabricInventory_detail", kwargs={"pk":self.id})
     
 
 class ReturnedFabric(Weight):
@@ -235,7 +235,7 @@ class ReturnedFabric(Weight):
         return f"{self.total_weight} to {self.fabric_inventory.supplier.name}"
 
     def get_absolute_url(self):
-        return reverse("ReturnedFabric_detail", kwargs={"pk":self.id})
+        return reverse("business:ReturnedFabric_detail", kwargs={"pk":self.id})
 
 
 class FabricDyeingFactory(Weight):
@@ -272,7 +272,7 @@ class FabricDyeingFactory(Weight):
         super(FabricDyeingFactory, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("FabricDyeingFactory_detail", kwargs={"pk":self.id})
+        return reverse("business:FabricDyeingFactory_detail", kwargs={"pk":self.id})
     
 
 class FabricDyeingInventory(Weight, Price):
@@ -300,7 +300,7 @@ class FabricDyeingInventory(Weight, Price):
         return f"{self.get_existing_weight()}kg {self.fabric} from {self.supplier}"
 
     def get_absolute_url(self):
-        return reverse("FabricDyeingInventory_detail", kwargs={"pk":self.id})
+        return reverse("business:FabricDyeingInventory_detail", kwargs={"pk":self.id})
 
 
 class SoldFabric(Weight, Price):
@@ -319,4 +319,4 @@ class SoldFabric(Weight, Price):
         return f"{self.customer} {self.total_weight}"
 
     def get_absolute_url(self):
-        return reverse("SoldFabric_detail", kwargs={"pk":self.id})
+        return reverse("business:SoldFabric_detail", kwargs={"pk":self.id})
