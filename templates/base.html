@@ -227,29 +227,29 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#customers" data-href="Customers.html">
+                                <a href="#customers" data-href="#">
                                     <i data-cs-icon="user" class="icon" data-cs-size="18"></i>
                                     <span class="label">Parteners</span>
                                 </a>
                                 <ul id="customers">
                                     <li>
-                                        <a href="Customers.List.html">
+                                        <a href="{% url 'business:customers_list' %}">
                                             <span class="label">Customers</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Customers.List.html">
+                                        <a href="{% url 'business:suppliers_list' %}">
                                             <span class="label">Suppliers</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Customers.List.html">
+                                        <a href="{% url 'business:factories_list' %}">
                                             <span class="label">Factories</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Customers.Detail.html">
-                                            <span class="label">Dyeing Factories</span>
+                                        <a href="{% url 'business:dyeing_factories_list' %}">
+                                            <span class="label">Dyeing-Factories</span>
                                         </a>
                                     </li>
                                 </ul>
