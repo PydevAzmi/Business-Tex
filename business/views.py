@@ -129,37 +129,51 @@ class PersonList(LoginRequiredMixin, View):
             path = request.path
             if path == "/customers/" :
                 myform.role = "Customer"
+                myform.save()
+                return redirect("business:customers_list")
             elif path == "/suppliers/" :
                 myform.role = "Supplier"
+                myform.save()
+                return redirect("business:suppliers_list")
             elif path == "/factories/":
                 myform.role = "Factory"
+                myform.save()
+                return redirect("business:factories_list")
             elif path == "/dyeing-factories/":
                 myform.role = "Dyeing Factory"
-            myform.save()
-        return redirect("path")
-                
+                myform.save()
+                return redirect("business:dyeing_factories_list")
+                            
         
-class CustomerDetail(LoginRequiredMixin,View):
+class PersonDetail(LoginRequiredMixin,View):
     def get(self, request, pk):
-        fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
-        form = FabricForm(instance=fabric)
-        return render(request, "business/products/fabric_detail.html", {"form": form})
+        person = get_object_or_404(Person, owner=request.user, id = pk)
+        form = PersonForm(instance=person)
+        return render(request, "business/parteners/person_detail.html", {"form": form})
         
     def post(self, request, pk):
-        fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
-        form = FabricForm(request.POST, instance=fabric)
+        person = get_object_or_404(Person, owner=request.user, id = pk)
+        role =  person.role
+        form = PersonForm(request.POST, instance=person)
         if form.is_valid():
             form.save()
-            return redirect("business:fabric_list")
+            if role == "Customer" :
+                return redirect("business:customers_list")
+            elif role == "Supplier" :
+                return redirect("business:suppliers_list")
+            elif role == "Factory":
+                return redirect("business:factories_list")
+            elif role == "Dyeing Factory":
+                return redirect("business:dyeing_factories_list")
         else:
-            fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
-            form = FabricForm(request.POST, instance=fabric)
-            return render(request, "business/products/fabric_detail.html", {"form": form})
+            person = get_object_or_404(Person, owner=request.user, id = pk)
+            form = PersonForm(request.POST, instance=person)
+            return render(request, "business/parteners/person_detail.html", {"form": form})
 
-class CustomerDelete(LoginRequiredMixin, View):
+class PersonDelete(LoginRequiredMixin, View):
     def post(self, request, pk):
-        fabric = get_object_or_404(Fabric, owner=request.user, id = pk)
-        fabric.delete()
-        return redirect("business:fabric_list")
+        person = get_object_or_404(Person, owner=request.user, id = pk)
+        person.delete()
+        return redirect("business:home")
 
 

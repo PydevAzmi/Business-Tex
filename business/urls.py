@@ -18,6 +18,6 @@ urlpatterns = [
     path("suppliers/", views.PersonList.as_view(), name="suppliers_list"),
     path("factories/", views.PersonList.as_view(), name="factories_list"),
     path("dyeing-factories/", views.PersonList.as_view(), name="dyeing_factories_list"),
-    path("customer/<pk>/", views.CustomerDetail.as_view(), name="customer_detail"),
-    path("customer/<pk>/delete", views.CustomerDelete.as_view(), name="customer_delete"),
+    path("person/<pk>/", views.PersonDetail.as_view(), name="Person_detail"),
+    path("person/<pk>/delete", views.PersonDelete.as_view(), name="person_delete"),
 ]

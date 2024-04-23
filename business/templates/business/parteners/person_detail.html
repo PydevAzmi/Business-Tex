@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+<title>Business Tex | Parteners {{form.name.value}}</title>
+<link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
+
+{% endblock head %}
+
+{% block main%}
+<main>
+    <!-- Title and Top Buttons Start -->
+    <div class="page-title-container">
+        <div class="row">
+            <!-- Title Start -->
+            <div class="col">
+                <h1 class="small-title mb-0 pb-0 display-4" id="title"> {{form.name.value}}</h1>
+                <div class="col-12 col-md-7">
+                    <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                        <ul class="breadcrumb pt-0">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="#">Parteners</a></li>
+                            <li class="breadcrumb-item"><a href="#">Person Table</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Title End -->
+        </div>
+    </div>
+
+    <div class="col-sm-8 col-md-9 col-lg-10 ms-auto text-end mb-3">
+
+        <!-- Delete Button Start -->
+        <form method="post" action="delete">
+            {% csrf_token %}
+        <button class="btn btn-outline-danger btn-icon btn-icon-start w-100 w-md-auto"
+            data-bs-delay="0"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" type="submit">
+            <i data-cs-icon="bin"></i>
+        </button>
+        </form>
+
+        <!-- Delete Button End -->
+    </div>
+    <!-- Title and Top Buttons End -->
+
+    <div class="card mb-5">
+        <div class="card-body">
+            <div class="mb-3 row">
+                <label class="col-lg-2 col-md-3 col-sm-4 col-form-label">{{form.name.value}} Details</label>
+                <div class="col-sm-8 col-md-9 col-lg-10">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                </div>
+                <div class="mb-3 row mt-5">
+                    <div class="col-sm-8 col-md-9 col-lg-10 ms-auto">
+                        <button type="submit" class="btn btn-outline-primary">Update</button>
+
+                    </div>
+                </div>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</main>
+{% endblock main %}
+
+{% block SpecificScripts %}
+<!-- Vendor Scripts Start -->
+<script src="{% static 'js/vendor/datatables.min.js' %}"></script>
+<script src="{% static 'js/vendor/mousetrap.min.js' %}"></script>
+<!-- Vendor Scripts End -->
+
+<!-- Page Specific Scripts Start -->
+<script src="{% static 'js/cs/datatable.extend.js' %}"></script>
+<script src="{% static 'js/plugins/datatable.editableboxed.js' %}"></script>
+<!-- Page Specific Scripts End -->
+{% endblock SpecificScripts %}

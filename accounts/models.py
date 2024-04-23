@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django_countries.fields import CountryField
 from django.contrib.auth.models import AbstractUser
@@ -46,6 +47,7 @@ class User(AbstractUser, Location):
         return reverse("User_detail", kwargs={"pk": self.pk})
 
 class Person(Location):
+    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User, verbose_name=_("Owner"), on_delete=models.CASCADE)
     name = models.CharField(_("Name"),max_length=150)
     email =models.EmailField(_("Email"), max_length=254, null=True, blank=True)
@@ -62,10 +64,11 @@ class Person(Location):
         return f"{self.name} {self.role}"
 
     def get_absolute_url(self):
-        return reverse("Person_detail", kwargs={"pk": self.pk})
+        return reverse("business:Person_detail", kwargs={"pk": self.pk})
 
 
 class Company(Location):
+    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User, verbose_name=_("Owner"), on_delete=models.CASCADE )
     name = models.CharField(_("Name"),max_length=150)
     email = models.EmailField(_("Email"), max_length=254, null=True, blank=True)
