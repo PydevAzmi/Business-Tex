@@ -186,7 +186,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#products" data-href="Products.html">
+                                <a href="#products">
                                     <i data-cs-icon="cupcake" class="icon" data-cs-size="18"></i>
                                     <span class="label">Products</span>
                                 </a>
@@ -204,30 +204,57 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#orders" data-href="Orders.html">
+                                <a href="#Sales" data-href="Orders.html">
                                     <i data-cs-icon="cart" class="icon" data-cs-size="18"></i>
                                     <span class="label">Sales</span>
                                 </a>
-                                <ul id="orders">
+                                <ul id="Sales">
                                     <li>
-                                        <a href="Orders.List.html">
-                                            <span class="label">Yarn</span>
+                                        <a href="#inv_yarn">
+                                            <span class="label">yarn</span>
                                         </a>
+                                        <ul id="inv_yarn">
+                                            <li>
+                                                <a href="{% url 'business:yarn_inv_list' %}">
+                                                    <span class="label">In</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'business:yarn_out_list' %}">
+                                                    <span class="label">Out</span>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <a href="Orders.Detail.html">
-                                            <span class="label">Raw Fabric</span>
+                                        <a href="#raw_fabric">
+                                            <span class="label">Fabric</span>
                                         </a>
+                                        <ul id="raw_fabric">
+                                            <li>
+                                                <a href="{% url 'business:fabric_inv_list' %}">
+                                                    <span class="label">Raw</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'business:dyied_fabric_inv_list' %}">
+                                                    <span class="label">Dyied</span>
+                                                </a>
+                                            </li>
+                                            <li>
+
+                                                <a href="{% url 'business:fabric_out_list' %}">
+                                                    <span class="label">Out</span>
+                                                </a>
+                                            </li>
+
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <a href="Orders.Detail.html">
-                                            <span class="label">Dyied Fabric</span>
-                                        </a>
-                                    </li>
+
                                 </ul>
                             </li>
                             <li>
-                                <a href="#customers" data-href="#">
+                                <a href="#customers" data-href="Customers.html">
                                     <i data-cs-icon="user" class="icon" data-cs-size="18"></i>
                                     <span class="label">Parteners</span>
                                 </a>
@@ -248,8 +275,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'business:dyeing_factories_list' %}">
-                                            <span class="label">Dyeing-Factories</span>
+                                        <a href="{% url 'business:dyeing_list' %}">
+                                            <span class="label">Dyeing</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -298,10 +325,32 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="Shipping.html">
+                                <a href="#Manufacturing" >
                                     <i data-cs-icon="shipping" class="icon" data-cs-size="18"></i>
-                                    <span class="label">Shipping</span>
+                                    <span class="label">Manufacturing</span>
                                 </a>
+                                <ul id="Manufacturing">
+                                    <li>
+                                        <a href="{% url 'business:yarn_factory_list' %}">
+                                            <span class="label">Yarn to Factory</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="label">Fabric to Dyeing</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="label">Returned Yarn</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="label">Returned Fabric</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
                                 <a href="Discount.html">

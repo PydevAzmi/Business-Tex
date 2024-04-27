@@ -61,7 +61,7 @@ class Person(Location):
         ordering = ['role']
         
     def __str__(self):
-        return f"{self.name} {self.role}"
+        return f"{self.name}"
 
     def get_absolute_url(self):
         return reverse("business:Person_detail", kwargs={"pk": self.pk})

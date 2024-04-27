@@ -138,7 +138,7 @@
             <div class="col-xl-12 mb-5">
                 <div class="d-flex justify-content-between">
                     <h2 class="small-title">Recently Added Yarns</h2>
-                    <a href="#" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
+                    <a href="{% url 'business:yarn_inv_list' %}" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
                         type="a">
                         <span class="align-bottom">View All</span>
                         <i data-cs-icon="chevron-right" class="align-middle" data-cs-size="12"></i>
@@ -152,7 +152,7 @@
                             <div class="card-body pt-0 pb-0 h-100">
                                 <div class="row g-0 h-100 align-content-center">
                                     <div class="col-9 col-md-3 d-flex align-items-center mb-3 mb-md-0 h-md-100">
-                                        <a href="{% url 'business:home' %}"
+                                        <a href="{{yarn.get_absolute_url}}"
                                             class="body-link stretched-link">{{yarn.yarn}}
                                         </a>
                                     </div>
@@ -180,7 +180,7 @@
 
                                     <div
                                         class="col-12 col-md-2 d-flex align-items-center justify-content-md-end mb-1 mb-md-0 text-alternate">
-                                        {{yarn.recieved_at|date:"H:m D d M "}}
+                                        {{yarn.recieved_at|date:"D d M"}}
                                     </div>
                                 </div>
                             </div>
@@ -240,7 +240,7 @@
 
                                     <div
                                         class="col-12 col-md-2 d-flex align-items-center justify-content-md-end mb-1 mb-md-0 text-alternate">
-                                        {{fabric.recieved_at|date:"H:m D d M "}}
+                                        {{fabric.recieved_at|date:"D d M "}}
                                     </div>
                                 </div>
                             </div>
@@ -300,7 +300,7 @@
 
                                     <div
                                         class="col-12 col-md-2 d-flex align-items-center justify-content-md-end mb-1 mb-md-0 text-alternate">
-                                        {{dyed_fabric.recieved_at|date:"H:m D d M "}}
+                                        {{dyed_fabric.recieved_at|date:"D d M "}}
                                     </div>
                                 </div>
                             </div>
@@ -391,14 +391,14 @@
                                             <td class="text-alternate">{{sold_fabric.total_weight}}</td>
                                             <td class="text-alternate">{{sold_fabric.customer.name|truncatechars:15}}</td>
                                             <td class="text-alternate">Dyed Fabric</td>
-                                            <td class="text-alternate">{{sold_fabric.sold_at|date:"H:m D d M "}}</td>
+                                            <td class="text-alternate">{{sold_fabric.sold_at|date:"D d M "}}</td>
                                             {% else %}
                                             <td>{{sold_fabric.Fabric_Inventory.fabric|truncatechars:15}}</td>
                                             <td class="text-alternate">{{sold_fabric.total_price}}</td>
                                             <td class="text-alternate">{{sold_fabric.total_weight}}</td>
                                             <td class="text-alternate">{{sold_fabric.customer.name|truncatechars:15}}</td>
                                             <td class="text-alternate">Raw Fabric</td>
-                                            <td class="text-alternate">{{sold_fabric.sold_at|date:"H:m D d M "}}</td>
+                                            <td class="text-alternate">{{sold_fabric.sold_at|date:"D d M "}}</td>
                                             {% endif %}
                                             
                                         </tr>
