@@ -26,6 +26,7 @@ urlpatterns = [
     path("inventory/yarn-in/", views.YarnInvList.as_view(), name="yarn_inv_list"),
     path("inventory/yarn-in/<pk>/", views.YarnInvDetail.as_view(), name="YarnInventory_detail"),
     path("inventory/yarn-in/<pk>/delete", views.YarnInvDelete.as_view(), name="yarn_inv_delete"),
+    
     path("inventory/yarn-out/", views.SoldYarnList.as_view(), name="yarn_out_list"),
     path("inventory/yarn-out/<pk>/", views.SoldYarnDetail.as_view(), name="SoldYarn_detail"),
     path("inventory/yarn-out/<pk>/delete", views.SoldYarnDelete.as_view(), name="yarn_out_delete"),
@@ -35,7 +36,7 @@ urlpatterns = [
     path("inventory/fabric-in/<pk>/delete", views.FabricInvDelete.as_view(), name="fabric_inv_delete"),
 
     path("inventory/dyied-fabric/", views.DyeidFabricInvList.as_view(), name="dyied_fabric_inv_list"),
-    path("inventory/dyied-fabric/<pk>/", views.DyeidFabricInvDetail.as_view(), name="FabricDyeingFactory_detail"),
+    path("inventory/dyied-fabric/<pk>/", views.DyeidFabricInvDetail.as_view(), name="FabricDyeingInventory_detail"),
     path("inventory/dyied-fabric/<pk>/delete", views.DyeidFabricInvDelete.as_view(), name="dyied_fabric_inv_delete"),
     
     path("inventory/fabric-out/", views.SoldFabricList.as_view(), name="fabric_out_list"),
@@ -46,4 +47,10 @@ urlpatterns = [
     path("manufacture/yarn-factory/", views.YarnFactoryList.as_view(), name ="yarn_factory_list"),
     path("manufacture/yarn-factory/<pk>/", views.YarnFactoryDetail.as_view(), name ="YarnFactory_detail"),
     path("manufacture/yarn-factory/<pk>/delete", views.YarnFactoryDelete.as_view(), name ="yarn_factory_delete"),
+
+    path("manufacture/fabric-dyeing/", views.FabricDyeingFactoryList.as_view(), name ="fabric_dyeid_factory_list"),
+    path("manufacture/fabric-dyeing/<pk>/", views.FabricDyeingFactoryDetail.as_view(), name ="FabricDyeingFactory_detail"),
+    path("manufacture/fabric-dyeing/<pk>/delete", views.FabricDyeingFactoryDelete.as_view(), name ="fabric_dyeid_factory_delete"),
+
+
 ]

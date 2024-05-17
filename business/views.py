@@ -215,7 +215,7 @@ class YarnInvDetail(LoginRequiredMixin, View):
 
 
 class YarnInvDelete(LoginRequiredMixin, View):
-    def Post(self, request, pk):
+    def post(self, request, pk):
         yarn_inv = get_object_or_404(YarnInventory, owner=request.user, id=pk)
         yarn_inv.delete()
         return redirect("business:yarn_inv_list")
@@ -251,12 +251,13 @@ class SoldYarnDetail(LoginRequiredMixin, View):
     def post(self, request, pk):
         yarn = get_object_or_404(SoldYarn, owner=request.user, id=pk)
         form = SoldYarnForm(request.POST, user=request.user, instance = yarn)
+        last_total = yarn.total_weight
         if form.is_valid():
             myform = form.save(commit=False)
             myform.owner = request.user
             exist = myform.yarn_inventory.get_existing_weight()
-            print( myform.total_weight <= 0 and myform.total_weight > exist)
-            if myform.total_weight <= 0 or myform.total_weight > exist :
+            print(last_total)
+            if myform.total_weight < 0 or myform.total_weight > exist + last_total:
                 form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
                 return render(request, "business/sales/yarn/yarn_out_detail.html", {"form": form})
             myform.save()
@@ -264,7 +265,7 @@ class SoldYarnDetail(LoginRequiredMixin, View):
 
     
 class SoldYarnDelete(LoginRequiredMixin, View):
-    def Post(self, request, pk):
+    def post(self, request, pk):
         sold_yarn = get_object_or_404(SoldYarn, owner=request.user, id=pk)
         sold_yarn.delete()
         return redirect("business:yarn_out_list")
@@ -282,13 +283,13 @@ class SoldFabricList(LoginRequiredMixin, View):
         if form.is_valid():
             myform = form.save(commit=False)
             myform.owner = request.user
-            if myform.Fabric_Inventory:
+            if myform.Fabric_Inventory and myform.fabric_dyeing_inventory :
+                form.add_error(None, "You Must Select Only One Kind of Fabric!")
+                return render(request, "business/sales/raw_fabric/fabric_out_list.html", {'fabric_list': fabric_list, "form": form})
+            elif myform.Fabric_Inventory:
                 exist = myform.Fabric_Inventory.get_existing_weight()
             elif myform.fabric_dyeing_inventory:
                 exist = myform.fabric_dyeing_inventory.get_existing_weight()
-            elif myform.Fabric_Inventory and myform.fabric_dyeing_inventory :
-                form.add_error(None, "You Must Select Only One Kind of Fabric!")
-                return render(request, "business/sales/raw_fabric/fabric_out_list.html", {'fabric_list': fabric_list, "form": form})
             else:
                 form.add_error(None, "You Must Select At Least One Fabric!")
                 return render(request, "business/sales/raw_fabric/fabric_out_list.html", {'fabric_list': fabric_list, "form": form})
@@ -309,11 +310,12 @@ class SoldFabricDetail(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         fabric = get_object_or_404(SoldFabric, owner=request.user, id=pk)
+        last_total = fabric.total_weight
         form = SoldFabricForm(request.POST, user=request.user, instance = fabric)
         if form.is_valid():
             myform = form.save(commit=False)
             if myform.Fabric_Inventory:
-                exist = myform.Fabric_Inventory.get_existing_weight()
+                exist = myform.Fabric_Inventory.get_existing_weight() 
             elif myform.fabric_dyeing_inventory:
                 exist = myform.fabric_dyeing_inventory.get_existing_weight()
             elif myform.Fabric_Inventory and myform.fabric_dyeing_inventory :
@@ -323,7 +325,7 @@ class SoldFabricDetail(LoginRequiredMixin, View):
                 form.add_error(None, "You Must Select At Least One Fabric!")
                 return render(request, "business/sales/raw_fabric/fabric_out_list.html", { "form": form})
             total = myform.total_weight
-            if total <= 0 or total > exist :
+            if total < 0 or total > exist + last_total :
                 form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
                 return render(request, "business/sales/raw_fabric/fabric_out_list.html", {"form": form})
             myform.save()
@@ -332,26 +334,39 @@ class SoldFabricDetail(LoginRequiredMixin, View):
 
     
 class SoldFabricDelete(LoginRequiredMixin, View):
-    def Post(self, request, pk):
+    def post(self, request, pk):
         sold_fabric = get_object_or_404(SoldFabric, owner=request.user, id=pk)
         sold_fabric.delete()
         return redirect("business:fabric_out_list")
  
 class FabricInvList(LoginRequiredMixin, View):
     def get(self, request):
-        form = FabricInvForm()
+        form = FabricInvForm(user=request.user)
         fabric_list = FabricInventory.objects.filter(owner= request.user).all()
         return render(request, "business/sales/raw_fabric/fabric_inv_list.html", {"fabric_list": fabric_list, "form":form})
 
     def post(self, request):
-        pass
+        form = FabricInvForm(request.POST, user=request.user)
+        if form.is_valid():
+            myform = form.save(commit=False)
+            myform.owner = request.user
+            myform.save()
+        return redirect("business:fabric_inv_list")
 
 class FabricInvDetail(LoginRequiredMixin, View):
     def get(self, request, pk):
-        pass
+        fabric = get_object_or_404(FabricInventory, owner = request.user, id=pk)
+        form = FabricInvForm(user=request.user, instance = fabric)
+        return render(request, "business/sales/raw_fabric/fabric_inv_detail.html", {"form":form})
 
     def post(self, request, pk):
-        pass
+        fabric = get_object_or_404(FabricInventory, owner=request.user, id=pk)
+        form = FabricInvForm(request.POST, user=request.user, instance = fabric)
+        if form.is_valid():
+            form.save()
+            return redirect("business:yarn_inv_list")
+        return render(request, "business/sales/yarn/yarn_inv_detail.html", {"form":form})
+
 
 class FabricInvDelete(LoginRequiredMixin,View):
     def post(self, request, pk):
@@ -362,17 +377,33 @@ class FabricInvDelete(LoginRequiredMixin,View):
 
 class DyeidFabricInvList(LoginRequiredMixin, View):
     def get(self, request):
-        pass
+        form = FabricDyeingInventoryForm(user=request.user)
+        fabric_list = FabricDyeingInventory.objects.filter(owner= request.user).all()
+        return render(request, "business/sales/dyied_fabric/dyied_fabric_inv_list.html", {"fabric_list": fabric_list, "form":form})
 
     def post(self, request):
-        pass
+        form = FabricDyeingInventoryForm(request.POST, user=request.user)
+        if form.is_valid():
+            myform = form.save(commit=False)
+            myform.owner = request.user
+            myform.save()
+        return redirect("business:dyied_fabric_inv_list")
+
 
 class DyeidFabricInvDetail(LoginRequiredMixin, View):
     def get(self, request, pk):
-        pass
+        dyied_fabric = get_object_or_404(FabricDyeingInventory, owner = request.user, id=pk)
+        form = FabricDyeingInventoryForm(user=request.user, instance = dyied_fabric)
+        return render(request, "business/sales/raw_fabric/fabric_inv_detail.html", {"form":form})
 
     def post(self, request, pk):
-        pass
+        dyied_fabric = get_object_or_404(FabricDyeingInventory, owner=request.user, id=pk)
+        form = FabricDyeingInventoryForm(request.POST, user=request.user, instance = dyied_fabric)
+        if form.is_valid():
+            form.save()
+            return redirect("business:dyied_fabric_inv_list")
+        return render(request, "business/sales/yarn/fabric_inv_detail.html", {"form":form})
+
 
 class DyeidFabricInvDelete(LoginRequiredMixin, View):
     def post(self, request, pk):
@@ -421,6 +452,30 @@ class YarnFactoryDelete(LoginRequiredMixin, View):
         return redirect("business:yarn_factory_list")
 
 
+class FabricDyeingFactoryList(LoginRequiredMixin, View):
+    def get(self, request):
+        form = FabricDyeingFactoryForm(user = request.user)
+        yarn_list = FabricDyeingFactory.objects.filter(fabric_inv__owner = request.user).all()
+        return render(request, "business/Manufacturing/yarn_factory_list.html", {'yarn_list': yarn_list, "form": form})
 
+    def post(self, request):
+        pass
+
+
+class FabricDyeingFactoryDetail(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        fabricdyeingfactory = get_object_or_404(FabricDyeingFactory, id =pk)
+        form = FabricDyeingFactoryForm(user= request.user, instance = fabricdyeingfactory)
+        return render(request, "business/Manufacturing/yarn_factory_detail.html", {"form" : form})
+
+    def post(self, request, pk):
+        pass
+
+
+class FabricDyeingFactoryDelete(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        yarn_factory = get_object_or_404(YarnFactory, fabric_inv__owner =request.user, id =pk)
+        yarn_factory.delete()
+        return redirect("business:yarn_factory_list")
 
 

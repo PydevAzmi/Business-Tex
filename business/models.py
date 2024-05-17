@@ -192,8 +192,8 @@ class ReturnedYarn(Weight):
 class FabricInventory(Weight, Price):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner=models.ForeignKey(User, verbose_name=_("Owner"), on_delete=models.CASCADE)
-    fabric=models.ForeignKey(Fabric, verbose_name=_("Faric"), on_delete=models.SET_NULL, null=True, blank=True)
-    supplier=models.ForeignKey(Person, verbose_name=_("Factory or Supplier"), on_delete=models.CASCADE)
+    fabric=models.ForeignKey(Fabric, verbose_name=_("Farbic"), on_delete=models.SET_NULL, null=True, blank=True)
+    supplier=models.ForeignKey(Person, verbose_name=_("Supplier"), on_delete=models.CASCADE)
     yarn_factory=models.ForeignKey(YarnFactory, verbose_name=_("Yarn Factory"), on_delete=models.SET_NULL, null=True, blank=True)
     quantity_recieved=models.DecimalField(_("received weight"), max_digits=10, decimal_places=2, null=True, blank=True)
     quantity_remaining=models.DecimalField(_("remaining weight"), max_digits=10, decimal_places=2, null=True, blank=True)

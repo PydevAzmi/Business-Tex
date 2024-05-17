@@ -336,7 +336,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{% url 'business:fabric_dyeid_factory_list' %}">
                                             <span class="label">Fabric to Dyeing</span>
                                         </a>
                                     </li>
@@ -660,7 +660,9 @@
     <script src="{% static 'js/common.js' %}"></script>
     <script src="{% static 'js/scripts.js' %}"></script>
     <!-- Template Base Scripts End -->
-
+    <script src="{% static 'js/vendor/datepicker/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js' %}"></script>
+    <script src="{% static 'js/forms/controls.datepicker.js' %}"></script>
     {% block SpecificScripts %}
     {% endblock SpecificScripts %}
 </body>
