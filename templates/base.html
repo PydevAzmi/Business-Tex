@@ -155,7 +155,7 @@
                             <button class="btn btn-empty language-button dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">Language</button>
                             <div class="dropdown-menu">
-                                <a href="#" class="dropdown-item">AR</a>
+                            <!--<a href="#" class="dropdown-item">AR</a> -->
                                 <a href="#" class="dropdown-item">EN</a>
                             </div>
                             <!-- Language Switch End -->
@@ -180,7 +180,7 @@
                     <div class="menu-container flex-grow-1">
                         <ul id="menu" class="menu">
                             <li>
-                                <a href="/admin">
+                                <a href="{% url 'business:home' %}" name=>
                                     <i data-cs-icon="shop" class="icon" data-cs-size="18"></i>
                                     <span class="label">Dashboard</span>
                                 </a>
@@ -281,6 +281,7 @@
                                     </li>
                                 </ul>
                             </li>
+                        <!--
                             <li>
                                 <a href="#storefront" data-href="Storefront.html">
                                     <i data-cs-icon="screen" class="icon" data-cs-size="18"></i>
@@ -288,42 +289,43 @@
                                 </a>
                                 <ul id="storefront">
                                     <li>
-                                        <a href="Storefront.Home.html">
+                                        <a href="#">
                                             <span class="label">Home</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Storefront.Filters.html">
+                                        <a href="#">
                                             <span class="label">Filters</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Storefront.Categories.html">
+                                        <a href="#">
                                             <span class="label">Categories</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Storefront.Detail.html">
+                                        <a href="#">
                                             <span class="label">Detail</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Storefront.Cart.html">
+                                        <a href="#">
                                             <span class="label">Cart</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Storefront.Checkout.html">
+                                        <a href="#">
                                             <span class="label">Checkout</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="Storefront.Invoice.html">
+                                        <a href="#">
                                             <span class="label">Invoice</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+                        -->
                             <li>
                                 <a href="#Manufacturing" >
                                     <i data-cs-icon="shipping" class="icon" data-cs-size="18"></i>
@@ -341,25 +343,25 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{% url 'business:returned_yarn_list' %}">
                                             <span class="label">Returned Yarn</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{% url 'business:returned_fabric_list' %}">
                                             <span class="label">Returned Fabric</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="Discount.html">
+                                <a href="#">
                                     <i data-cs-icon="tag" class="icon" data-cs-size="18"></i>
                                     <span class="label">Discount</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="Settings.html">
+                                <a href="#">
                                     <i data-cs-icon="gear" class="icon" data-cs-size="18"></i>
                                     <span class="label">Settings</span>
                                 </a>

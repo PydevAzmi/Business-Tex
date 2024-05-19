@@ -95,7 +95,7 @@ class YarnInventory(Weight, Price):
     class Meta:
         verbose_name=_("Yarn In Stock")
         verbose_name_plural=_("Yarns In Stock")
-        ordering = ["-recieved_at"]
+        ordering=["-recieved_at"]
 
     def get_absolute_url(self):
         return reverse("business:YarnInventory_detail", kwargs={"pk":self.id})
@@ -118,7 +118,7 @@ class SoldYarn(Weight, Price):
     class Meta:
         verbose_name=_("Sold Yarn")
         verbose_name_plural=_("Sold Yarns")
-        ordering=["yarn_inventory", "customer", "sold_at"]
+        ordering=["yarn_inventory", "customer", "-sold_at"]
 
     def __str__(self):
         return f"{self.total_weight} kg {self.yarn_inventory.yarn} buyed to {self.customer}"
@@ -171,7 +171,9 @@ class YarnFactory(Weight):
             if self.fabric_weight:
                 fabric_inventory.total_weight=self.fabric_weight
             fabric_inventory.save()
+        super(YarnFactory, self).save(*args, **kwargs)
 
+        
 class ReturnedYarn(Weight):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     yarn_factory=models.ForeignKey(YarnFactory, verbose_name=_("Yarn in Factory"), on_delete=models.CASCADE)
@@ -292,7 +294,7 @@ class FabricDyeingInventory(Weight, Price):
         verbose_name_plural=_("Dyed fabrics in stock")
     
     def get_existing_weight(self):
-        total_out = self.soldfabric_set.aggregate(total_sold=Sum('total_weight'))['total_sold'] or 0 # type:ignore
+        total_out=self.soldfabric_set.aggregate(total_sold=Sum('total_weight'))['total_sold'] or 0 # type:ignore
         return self.total_weight - total_out
     
     def __str__(self):

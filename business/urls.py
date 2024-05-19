@@ -5,6 +5,7 @@ app_name = "business"
 urlpatterns = [
     #Dashboard
     path("", views.home, name="home"),
+    path("home/", views.home, name="home"),
 
     #Products
     path("yarn/", views.YarnList.as_view(), name="yarn_list"),
@@ -51,6 +52,12 @@ urlpatterns = [
     path("manufacture/fabric-dyeing/", views.FabricDyeingFactoryList.as_view(), name ="fabric_dyeid_factory_list"),
     path("manufacture/fabric-dyeing/<pk>/", views.FabricDyeingFactoryDetail.as_view(), name ="FabricDyeingFactory_detail"),
     path("manufacture/fabric-dyeing/<pk>/delete", views.FabricDyeingFactoryDelete.as_view(), name ="fabric_dyeid_factory_delete"),
+    
+    path("manufacture/returned-yarn/", views.ReturnedYarnList.as_view(), name ="returned_yarn_list"),
+    path("manufacture/returned-yarn/<pk>/", views.ReturnedYarnDetail.as_view(), name ="ReturnedYarn_detail"),
+    path("manufacture/returned-yarn/<pk>/delete", views.ReturnedYarnDelete.as_view(), name ="returned_yarn_delete"),
 
-
+    path("manufacture/returned-fabric/", views.ReturnedFabricList.as_view(), name ="returned_fabric_list"),
+    path("manufacture/returned-fabric/<pk>/", views.ReturnedFabricDetail.as_view(), name ="ReturnedFabric_detail"),
+    path("manufacture/returned-fabric/<pk>/delete", views.ReturnedFabricDelete.as_view(), name ="returned_fabric_delete"),
 ]

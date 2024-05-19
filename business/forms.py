@@ -234,6 +234,7 @@ class FabricDyeingInventoryForm(forms.ModelForm):
 
         ]
 
+
 class FabricDyeingFactoryForm(forms.ModelForm):
     came_out_at = forms.CharField(
         required=True,
@@ -260,3 +261,51 @@ class FabricDyeingFactoryForm(forms.ModelForm):
         ]
 
 
+class ReturnedYarnForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['yarn_factory'].queryset = YarnFactory.objects.filter(yarn_inventory__owner=user).all()
+
+    returned_at = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            "id": "datePickerFormat",
+            }))
+    
+    class Meta:
+        model = ReturnedYarn
+        fields = [
+            "yarn_factory",
+            "total_weight",
+            "unit_type",
+            "quantity_per_unit",
+            "returned_at",
+            "status",
+            "notes",
+        ]
+
+
+class ReturnedFabricForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['fabric_inventory'].queryset = FabricInventory.objects.filter(owner=user).all()
+
+    returned_at = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            "id": "datePickerFormat",
+            }))
+    
+    class Meta:
+        model = ReturnedFabric
+        fields =[
+            "fabric_inventory",
+            "total_weight",
+            "unit_type",
+            "quantity_per_unit",
+            "returned_at",
+            "status",
+            "notes",
+        ]

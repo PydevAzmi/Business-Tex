@@ -439,8 +439,14 @@ class YarnFactoryDetail(LoginRequiredMixin, View):
     def post(self, request, pk):
         yarn_factory = get_object_or_404(YarnFactory, id=pk)
         form = YarnFactoryCraeteForm(request.POST, user=request.user, instance = yarn_factory)
+        last_total = yarn_factory.total_weight
         if form.is_valid():
-            form.save()
+            myform = form.save(commit=False)
+            exist = myform.yarn_inventory.get_existing_weight()
+            if myform.total_weight <= 0 or myform.total_weight > exist + last_total:
+                form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
+                return render(request, "business/Manufacturing/yarn_factory_detail.html", { "form": form})
+            myform.save()
             return redirect("business:yarn_factory_list")
         return render(request, "business/Manufacturing/yarn_factory_detail.html", {"form" : form})
 
@@ -456,26 +462,139 @@ class FabricDyeingFactoryList(LoginRequiredMixin, View):
     def get(self, request):
         form = FabricDyeingFactoryForm(user = request.user)
         yarn_list = FabricDyeingFactory.objects.filter(fabric_inv__owner = request.user).all()
-        return render(request, "business/Manufacturing/yarn_factory_list.html", {'yarn_list': yarn_list, "form": form})
+        return render(request, "business/Manufacturing/fabric_dyeing_factory_list.html", {'yarn_list': yarn_list, "form": form})
 
     def post(self, request):
-        pass
+        form = FabricDyeingFactoryForm(request.POST, user=request.user)
+        if form.is_valid():
+            myform = form.save(commit=False)
+            exist = myform.fabric_inv.get_existing_weight()
+            if myform.total_weight <= 0 or myform.total_weight > exist :
+                yarn_list = FabricDyeingFactory.objects.filter(fabric_inv__owner = request.user).all()
+                form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
+                return render(request, "business/Manufacturing/fabric_dyeing_factory_list.html", {'yarn_list': yarn_list, "form": form})
+            myform.save()
+            
+        return redirect("business:fabric_dyeid_factory_list")
 
 
 class FabricDyeingFactoryDetail(LoginRequiredMixin, View):
     def get(self, request, pk):
         fabricdyeingfactory = get_object_or_404(FabricDyeingFactory, id =pk)
-        form = FabricDyeingFactoryForm(user= request.user, instance = fabricdyeingfactory)
-        return render(request, "business/Manufacturing/yarn_factory_detail.html", {"form" : form})
+        form = FabricDyeingFactoryForm( user= request.user, instance = fabricdyeingfactory)
+        return render(request, "business/Manufacturing/fabric_dyeing_factory_detail.html", {"form" : form})
 
     def post(self, request, pk):
-        pass
+        fabricdyeingfactory = get_object_or_404(FabricDyeingFactory, id =pk)
+        form = FabricDyeingFactoryForm(request.POST,user= request.user, instance = fabricdyeingfactory)
+        last_total = fabricdyeingfactory.total_weight
+        if form.is_valid():
+            myform = form.save(commit=False)
+            exist = myform.fabric_inv.get_existing_weight()
+            if myform.total_weight <= 0 or myform.total_weight > exist + last_total :
+                form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
+                return render(request, "business/Manufacturing/fabric_dyeing_factory_detail.html", { "form": form})
+            myform.save()
+            return redirect("business:fabric_dyeid_factory_list")
+        return redirect("business:fabric_dyeid_factory_list")
 
 
 class FabricDyeingFactoryDelete(LoginRequiredMixin, View):
     def post(self, request, pk):
-        yarn_factory = get_object_or_404(YarnFactory, fabric_inv__owner =request.user, id =pk)
-        yarn_factory.delete()
-        return redirect("business:yarn_factory_list")
+        dyied_fabric_factory = get_object_or_404(FabricDyeingFactory, fabric_inv__owner = request.user, id =pk)
+        dyied_fabric_factory.delete()
+        return redirect("business:fabric_dyeid_factory_list")
 
+
+class ReturnedYarnList(LoginRequiredMixin, View):
+    def get(self, request):
+        form = ReturnedYarnForm(user = request.user)
+        yarn_list = ReturnedYarn.objects.filter(yarn_factory__yarn_inventory__owner = request.user).all()
+        return render(request, "business/Manufacturing/returned_yarn_list.html", {'yarn_list': yarn_list, "form": form})
+
+    def post(self, request):
+        form = ReturnedYarnForm(request.POST, user=request.user)
+        if form.is_valid():
+            myform = form.save(commit = False)
+            if myform.total_weight <= 0:
+                yarn_list = ReturnedYarn.objects.filter(yarn_factory__yarn_inventory__owner = request.user).all()
+                form.add_error(None, "The Total Weight Must Be Greater Than 0.")
+                return render(request, "business/Manufacturing/returned_yarn_list.html", {'yarn_list': yarn_list, "form": form})
+            form.save()
+        return redirect("business:returned_yarn_list")
+
+
+class ReturnedYarnDetail(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        reurned_yarn = get_object_or_404(ReturnedYarn, id =pk, yarn_factory__yarn_inventory__owner = request.user)
+        form = ReturnedYarnForm( user= request.user, instance = reurned_yarn)
+        return render(request, "business/Manufacturing/returned_detail.html", {"form" : form})
+
+    def post(self, request, pk):
+        reurned_yarn = get_object_or_404(ReturnedYarn, yarn_factory__yarn_inventory__owner = request.user, id =pk)
+        form = ReturnedYarnForm(request.POST,user= request.user, instance = reurned_yarn)
+        last_total = reurned_yarn.total_weight
+        if form.is_valid():
+            myform = form.save(commit=False)
+            exist = myform.fabric_inv.get_existing_weight()
+            print(exist)
+            if myform.total_weight <= 0 or myform.total_weight > exist + last_total :
+                form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
+                return render(request, "business/Manufacturing/fabric_dyeing_factory_detail.html", { "form": form})
+            myform.save()
+        return redirect("business:returned_yarn_list")
+
+
+class ReturnedYarnDelete(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        reurned_yarn = get_object_or_404(ReturnedYarn, yarn_factory__yarn_inventory__owner = request.user, id =pk)
+        reurned_yarn.delete()
+        return redirect("business:returned_yarn_list")
+
+
+class ReturnedFabricList(LoginRequiredMixin, View):
+    def get(self, request):
+        form = ReturnedFabricForm(user = request.user)
+        yarn_list = ReturnedFabric.objects.filter(fabric_inventory__owner = request.user).all()
+        return render(request, "business/Manufacturing/returned_yarn_list.html", {'yarn_list': yarn_list, "form": form})
+
+    def post(self, request):
+        form = ReturnedFabricForm(request.POST, user=request.user)
+        if form.is_valid():
+            myform = form.save(commit=False)
+            exist = myform.fabric_inventory.get_existing_weight()
+            if myform.total_weight <= 0 or myform.total_weight > exist :
+                yarn_list = ReturnedFabric.objects.filter(fabric_inventory__owner = request.user).all()
+                form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
+                return render(request, "business/Manufacturing/returned_yarn_list.html", {'yarn_list': yarn_list, "form": form})
+            form.save()
+        return redirect("business:returned_fabric_list")
+
+
+class ReturnedFabricDetail(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        returned_fabric = get_object_or_404(ReturnedFabric, fabric_inventory__owner = request.user, id =pk)
+        form = ReturnedFabricForm( user= request.user, instance = returned_fabric)
+        return render(request, "business/Manufacturing/returned_detail.html", {"form" : form})
+
+    def post(self, request, pk):
+        returned_fabric = get_object_or_404(ReturnedFabric, fabric_inventory__owner = request.user, id =pk)
+        form = ReturnedFabricForm(request.POST,user= request.user, instance = returned_fabric)
+        last_total = returned_fabric.total_weight
+        if form.is_valid():
+            myform = form.save(commit=False)
+            exist = myform.fabric_inv.get_existing_weight()
+            print(exist)
+            if myform.total_weight <= 0 or myform.total_weight > exist + last_total :
+                form.add_error(None, "The Total Weight Must Be Less Than The Actual Existing Weight.")
+                return render(request, "business/Manufacturing/returned_detail.html", { "form": form})
+            myform.save()
+        return redirect("business:returned_fabric_list")
+
+
+class ReturnedFabricDelete(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        returned_fabric = get_object_or_404(ReturnedFabric, fabric_inventory__owner = request.user, id =pk)
+        returned_fabric.delete()
+        return redirect("business:returned_fabric_list")
 
