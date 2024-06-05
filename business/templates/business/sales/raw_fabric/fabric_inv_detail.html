@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block head %}
-<title>Business Tex | Inventoery Yarn</title>
+<title>Business Tex | Inventoery Fabric</title>
 <link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
 {% endblock head %}
 
@@ -14,13 +14,13 @@
         <div class="row">
             <!-- Title Start -->
             <div class="col">
-                <h1 class="small-title mb-0 pb-0 display-4" id="title">Yarn</h1>
+                <h1 class="small-title mb-0 pb-0 display-4" id="title">Raw fabric</h1>
                 <div class="col-12 col-md-7">
                     <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                         <ul class="breadcrumb pt-0">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
                             <li class="breadcrumb-item"><a href="#">Sales</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'business:yarn_inv_list' %}">Yarn Table</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'business:fabric_inv_list' %}">Raw Fabric</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -49,7 +49,7 @@
     <div class="card mb-5">
         <div class="card-body">
             <div class="mb-3 row">
-                <label class="col-lg-2 col-md-3 col-sm-4 col-form-label">Yarn Detail</label>
+                <label class="col-lg-2 col-md-3 col-sm-4 col-form-label">Fabric Detail</label>
                 <div class="col-sm-8 col-md-9 col-lg-10">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}

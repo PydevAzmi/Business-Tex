@@ -198,7 +198,7 @@
             <div class="col-xl-12 mb-5">
                 <div class="d-flex justify-content-between">
                     <h2 class="small-title">Recently Added Fabrics</h2>
-                    <a href="#" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
+                    <a href="{% url 'business:fabric_inv_list' %}" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
                         type="a">
                         <span class="align-bottom">View All</span>
                         <i data-cs-icon="chevron-right" class="align-middle" data-cs-size="12"></i>
@@ -212,7 +212,7 @@
                             <div class="card-body pt-0 pb-0 h-100">
                                 <div class="row g-0 h-100 align-content-center">
                                     <div class="col-9 col-md-3 d-flex align-items-center mb-3 mb-md-0 h-md-100">
-                                        <a href="{% url 'business:home' %}"
+                                        <a href="{{fabric.get_absolute_url}}"
                                             class="body-link stretched-link">{{fabric.fabric}}
                                         </a>
                                     </div>
@@ -258,7 +258,7 @@
             <div class="col-xl-12 mb-5">
                 <div class="d-flex justify-content-between">
                     <h2 class="small-title">Recently Added Dyied Fabric</h2>
-                    <a href="#" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
+                    <a href="{% url 'business:dyied_fabric_inv_list' %}" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
                         type="a">
                         <span class="align-bottom">View All</span>
                         <i data-cs-icon="chevron-right" class="align-middle" data-cs-size="12"></i>
@@ -272,7 +272,7 @@
                             <div class="card-body pt-0 pb-0 h-100">
                                 <div class="row g-0 h-100 align-content-center">
                                     <div class="col-9 col-md-3 d-flex align-items-center mb-3 mb-md-0 h-md-100">
-                                        <a href="{% url 'business:home' %}"
+                                        <a href="{{dyed_fabric.get_absolute_url}}"
                                             class="body-link stretched-link">{{dyed_fabric.fabric}}
                                         </a>
                                     </div>
@@ -319,7 +319,7 @@
                 <section class="scroll-section" id="scrollbar">
                     <div class="d-flex justify-content-between">
                         <h2 class="small-title">Last Sold Fabric</h2>
-                        <a href="#" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
+                        <a href="{% url 'business:fabric_out_list' %}" class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
                             type="a">
                             <span class="align-bottom">View All</span>
                             <i data-cs-icon="chevron-right" class="align-middle" data-cs-size="12"></i>
@@ -386,7 +386,16 @@
                                         {% for sold_fabric in  sold_fabrics %}                                                                    
                                         <tr>
                                             {% if sold_fabric.fabric_dyeing_inventory %}
-                                            <td>{{sold_fabric.fabric_dyeing_inventory.fabric|truncatechars:15}}</td>
+                                            <td>
+                                                <a class="list-item-heading body" href = "{{sold_fabric.get_absolute_url}}">
+                                                  {% if sold_fabric.fabric_dyeing_inventory %}
+                                                  Dyed : {{sold_fabric.fabric_dyeing_inventory}}
+                        
+                                                  {% else %}
+                                                  Raw : {{sold_fabric.Fabric_Inventory}}
+                                                  {% endif %}
+                                                </a>
+                                              </td>
                                             <td class="text-alternate">{{sold_fabric.total_price}}</td>
                                             <td class="text-alternate">{{sold_fabric.total_weight}}</td>
                                             <td class="text-alternate">{{sold_fabric.customer.name|truncatechars:15}}</td>

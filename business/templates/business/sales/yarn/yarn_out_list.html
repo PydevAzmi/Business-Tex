@@ -23,7 +23,7 @@
                                 <ul class="breadcrumb pt-0">
                                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                                     <li class="breadcrumb-item"><a href="#">Sales</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Yarn</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Sold Yarn</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -126,8 +126,8 @@
                                         <th class="text-muted text-small text-uppercase">Yarn Name</th>
                                         <th class="text-muted text-small text-uppercase">Customer</th>
                                         <th class="text-muted text-small text-uppercase">Total weight</th>
-                                        <th class="empty all">&nbsp;</th>
-                                        <th class="empty all">&nbsp;</th>
+                                        <th class="text-muted text-small text-uppercase">Total Price</th>
+                                        <th class="text-muted text-small text-uppercase">time</th>
                                         <th class="empty all">&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -142,8 +142,8 @@
                                         </td>
                                         <td>{{sold_yarn.customer}}</td>
                                         <td>{{sold_yarn.total_weight}} kg</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{sold_yarn.total_price}} E.P </td>
+                                        <td>{{sold_yarn.sold_at|date:"D d M"}} </td>
                                         <td></td>
                                     </tr>
                                     {% endfor %}

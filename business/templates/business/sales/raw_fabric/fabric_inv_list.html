@@ -120,11 +120,12 @@
                     <tr>
 
                       <th class="text-muted text-small text-uppercase">Name</th>
-                      <th class="empty all">&nbsp;</th>
-                      <th class="empty all">&nbsp;</th>
-                      <th class="text-muted text-small text-uppercase">Type</th>
-                      <th class="empty all">&nbsp;</th>
-                      <th class="empty all">&nbsp;</th>
+                      <th class="text-muted text-small text-uppercase">Supplier </th>
+                      <th class="text-muted text-small text-uppercase">Total Weight</th>
+                      <th class="text-muted text-small text-uppercase">price</th>
+                      <th class="text-muted text-small text-uppercase">status</th>
+                      <th class="text-muted text-small text-uppercase">time</th>
+
                     </tr>
                   </thead>
                   <tbody>
@@ -133,14 +134,14 @@
                     <tr>
                       <td>
                         <a class="list-item-heading body" href = "{{ fabric.get_absolute_url }}">
-                          {{fabric}}
+                          {{fabric.fabric}} ({{fabric.get_existing_weight}})
                         </a>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td> {{fabric.fabric_type}} </td>
-                      <td></td>
-                      <td></td>
+                      <td> {{fabric.supplier}}</td>
+                      <td> {{fabric.total_weight}}</td>
+                      <td> {{fabric.total_price}}</td>
+                      <td class="badge bg-outline-primary me-1">{{fabric.status}}</td>
+                      <td> {{fabric.recieved_at|date:"D d M"}} </td>
                     </tr>
                     {% endfor %}
                   </tbody>

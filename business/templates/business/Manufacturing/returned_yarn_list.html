@@ -123,13 +123,14 @@
                             <table id="datatableBoxed" class="data-table hover">
                                 <thead>
                                     <tr>
-                                        <th class="text-muted text-small text-uppercase">Yarn Name</th>
+                                        <th class="text-muted text-small text-uppercase">Yarn</th>
                                         <th class="text-muted text-small text-uppercase">Factory</th>
                                         <th class="text-muted text-small text-uppercase">Total weight</th>
                                         <th class="text-muted text-small text-uppercase">Existing weight</th>
-                                        <th class="text-muted text-small text-uppercase">Total Price</th>
-                                        <th class="text-muted text-small text-uppercase">status</th>
                                         <th class="empty all">&nbsp;</th>
+
+                                        <th class="text-muted text-small text-uppercase">status</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -138,13 +139,13 @@
                                     <tr>
                                         <td>
                                             <a href="{{yarn.get_absolute_url}}" class="list-item-heading body">
-                                                {{yarn}}
+                                                {{yarn.yarn_factory}}
                                             </a>
                                         </td>
-                                        <td>{{yarn.factory}}</td>
+                                        <td>{{yarn.yarn_factory.factory}}</td>
                                         <td>{{yarn.total_weight}} kg</td>
-                                        <td>{{yarn.get_existing_weight}} kg</td>
-                                        <td>{{yarn.total_price}} E.P</td>
+                                        <td>{{yarn.yarn_factory.yarn_inventory.get_existing_weight}} kg</td>
+                                        <td></td>
                                         <td class="badge bg-outline-primary me-1">{{yarn.status}}</td>
                                     </tr>
                                     {% endfor %}

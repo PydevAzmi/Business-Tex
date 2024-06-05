@@ -143,7 +143,7 @@ class YarnFactory(Weight):
         verbose_name_plural=_("Yarns In Factories")
 
     def __str__(self):
-        return f"{self.total_weight} kg > {self.yarn_inventory.yarn} to {self.factory}"
+        return f"{self.yarn_inventory.yarn} ({self.total_weight}) "
 
     def get_absolute_url(self):
         return reverse("business:YarnFactory_detail", kwargs={"pk":self.id})

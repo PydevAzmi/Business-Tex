@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block head %}
-<title>Business Tex | Factory Yarn</title>
+<title>Business Tex | Fabric To Dyeing</title>
 <link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
 
 {% endblock head %}
@@ -18,12 +18,12 @@
                     <div class="row">
                         <!-- Title Start -->
                         <div class="col-12 col-md-7">
-                            <h1 class="mb-0 pb-0 display-4" id="title">Yarn to Factory</h1>
+                            <h1 class="mb-0 pb-0 display-4" id="title">Fabric to Dyeing Factory</h1>
                             <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                                 <ul class="breadcrumb pt-0">
                                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                                     <li class="breadcrumb-item"><a href="#">Manufacturing</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Yarn</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Fabric</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -123,29 +123,29 @@
                             <table id="datatableBoxed" class="data-table hover">
                                 <thead>
                                     <tr>
-                                        <th class="text-muted text-small text-uppercase">Yarn Name</th>
-                                        <th class="text-muted text-small text-uppercase">Factory</th>
-                                        <th class="text-muted text-small text-uppercase">Total weight</th>
-                                        <th class="text-muted text-small text-uppercase">Existing weight</th>
-                                        <th class="text-muted text-small text-uppercase">Total Price</th>
-                                        <th class="text-muted text-small text-uppercase">status</th>
+                                        <th class="text-muted text-small text-uppercase">Fabric</th>
                                         <th class="empty all">&nbsp;</th>
+                                        <th class="text-muted text-small text-uppercase">Dyeing Factory</th>
+                                        <th class="text-muted text-small text-uppercase">Total weight</th>
+                                        <th class="empty all">&nbsp;</th>
+                                        <th class="text-muted text-small text-uppercase">time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                    {% for yarn in yarn_list %}
+                                    {% for fabric in fabric_list %}
                                     <tr>
                                         <td>
-                                            <a href="{{yarn.get_absolute_url}}" class="list-item-heading body">
-                                                {{yarn}}
+                                            <a href="{{fabric.get_absolute_url}}" class="list-item-heading body">
+                                                {{fabric.fabric_inv}}
                                             </a>
                                         </td>
-                                        <td>{{yarn.factory}}</td>
-                                        <td>{{yarn.total_weight}} kg</td>
-                                        <td>{{yarn.get_existing_weight}} kg</td>
-                                        <td>{{yarn.total_price}} E.P</td>
-                                        <td class="badge bg-outline-primary me-1">{{yarn.status}}</td>
+                                        <td></td>
+
+                                        <td>{{fabric.dyeing_factory}}</td>
+                                        <td>{{fabric.total_weight}} kg</td>
+                                        <td></td>
+                                        <td>{{fabric.came_out_at|date:"D d M"}}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

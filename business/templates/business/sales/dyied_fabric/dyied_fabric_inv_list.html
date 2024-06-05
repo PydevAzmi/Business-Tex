@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block head %}
-<title>Business Tex | Products Fabrics</title>
+<title>Business Tex | Inventory Dyed Fabrics</title>
 <link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
 
 {% endblock head %}
@@ -18,12 +18,12 @@
           <div class="row">
             <!-- Title Start -->
             <div class="col-12 col-md-7">
-              <h1 class="mb-0 pb-0 display-4" id="title">Fabrics Datatables</h1>
+              <h1 class="mb-0 pb-0 display-4" id="title">Dyed Fabrics Datatables</h1>
               <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                 <ul class="breadcrumb pt-0">
                   <li class="breadcrumb-item"><a href="/">Home</a></li>
-                  <li class="breadcrumb-item"><a href="#">Products</a></li>
-                  <li class="breadcrumb-item"><a href="#">Fabrics</a></li>
+                  <li class="breadcrumb-item"><a href="#">Sales</a></li>
+                  <li class="breadcrumb-item"><a href="#">Dyed Fabrics</a></li>
                 </ul>
               </nav>
             </div>
@@ -120,11 +120,11 @@
                     <tr>
 
                       <th class="text-muted text-small text-uppercase">Name</th>
-                      <th class="empty all">&nbsp;</th>
-                      <th class="empty all">&nbsp;</th>
-                      <th class="text-muted text-small text-uppercase">Type</th>
-                      <th class="empty all">&nbsp;</th>
-                      <th class="empty all">&nbsp;</th>
+                      <th class="text-muted text-small text-uppercase">Supplier </th>
+                      <th class="text-muted text-small text-uppercase">Weight</th>
+                      <th class="text-muted text-small text-uppercase">price</th>
+                      <th class="text-muted text-small text-uppercase">status</th>
+                      <th class="text-muted text-small text-uppercase">time</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -133,14 +133,14 @@
                     <tr>
                       <td>
                         <a class="list-item-heading body" href = "{{ fabric.get_absolute_url }}">
-                          {{fabric}}
+                          {{fabric}}  
                         </a>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td> {{fabric.fabric_type}} </td>
-                      <td></td>
-                      <td></td>
+                      <td> {{fabric.supplier}}</td>
+                      <td> {{fabric.fabric_dyeing_factory.total_weight}}</td>
+                      <td> {{fabric.total_price}}</td>
+                      <td class="badge bg-outline-primary me-1">{{fabric.status}}</td>
+                      <td> {{fabric.recieved_at|date:"D d M"}} </td>
                     </tr>
                     {% endfor %}
                   </tbody>
