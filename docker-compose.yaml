@@ -1,3 +1,4 @@
+# Setup Services
 services:
   db:
     image: postgres
@@ -7,6 +8,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   web:
+    container_name: Django
     build: . 
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
