@@ -1,0 +1,316 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% load crispy_forms_tags %} 
+
+{%block head %}
+<title>Business Tex | Invoice</title>
+<link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
+
+{% endblock head %} 
+
+{% block main %}
+
+<main class="print-restricted">
+    <div class="container">
+        <!-- Title and Top Buttons Start -->
+        <div class="page-title-container">
+            <div class="row">
+                <!-- Title Start -->
+                <div class="col-auto mb-3 mb-md-0 me-auto">
+                    <div class="w-auto sw-md-30">
+                        <a href="#"
+                            class="muted-link pb-1 d-inline-block breadcrumb-back">
+                            <i data-cs-icon="chevron-left"
+                                data-cs-size="13"></i>
+                            <span
+                                class="text-small align-middle">Storefront</span>
+                        </a>
+                        <h1 class="mb-0 pb-0 display-4" id="title">Invoice</h1>
+                    </div>
+                </div>
+                <!-- Title End -->
+
+                <!-- Top Buttons Start -->
+                <div
+                    class="col-12 col-md-5 d-flex align-items-center justify-content-end">
+                    <a onclick="window.print(); return false;"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                        href="#">
+                        <i data-cs-icon="print"></i>
+                        <span>Print</span>
+                    </a>
+                   
+                </div>
+            <!-- Top Buttons End -->
+            </div>
+        </div>
+        <!-- Range Start -->
+        <section class="scroll-section" id="range">
+            <h2 class="small-title">Range</h2>
+            <div class="card mb-5">
+                <div class="card-body">
+                <label class="form-label">Date</label>
+                <div class="input-daterange input-group" id="datePickerRange">
+                    <input type="text" class="form-control" name="start" placeholder="Start" />
+                    <span class="mx-2"></span>
+                    <input type="text" class="form-control" name="end" placeholder="End" />
+                </div>
+                </div>
+            </div>
+        </section>
+        <!-- Range End -->
+        <!-- Title and Top Buttons End -->
+
+        <!-- Standard Start -->
+        <!-- card-print: removes shadow, margin and padding  -->
+        <!-- print-me: removes everyting from main .container except the element with the class -->
+        <h2 class="small-title">Standard</h2>
+        <div class="card mb-5 card-print print-me">
+            <div class="card-body">
+                <div class="row d-flex flex-row align-items-center">
+                    <div class="col-12 col-md-6">
+                        <img src="{% static 'img/logo/logo-blue-light.svg' %}" class="sw-17"
+                            alt="logo" />
+                    </div>
+                    <div class="col-12 col-md-6 text-end">
+                        <div class="mb-2">ColoredStrategies Inc</div>
+                        <div class="text-small text-muted">4 Glamis Avenue,
+                            Strathmore Park, Wellington 6022, New Zealand</div>
+                        <div class="text-small text-muted">+6443884455</div>
+                    </div>
+                </div>
+                <div class="row mt-5 mb-5">
+                    <div class="col">
+                        <div class="separator separator-light"></div>
+                    </div>
+                </div>
+                <div class="row g-1 mb-5">
+                    <div class="col-12 col-md-8">
+                        <div class="py-3">
+                            <div>Blaine Cottrell</div>
+                            <div>55 Esk Street, Invercargill 55555550, New
+                                Zealand</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="py-3 text-md-end">
+                            <div>Invoice #: 741</div>
+                            <div>02.02.2019</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row mb-4 d-none d-sm-flex">
+                        <div class="col-6">
+                            <p class="mb-0 text-small text-muted">ITEM NAME</p>
+                        </div>
+                        <div class="col-3">
+                            <p class="mb-0 text-small text-muted">COUNT</p>
+                        </div>
+                        <div class="col-3 text-end">
+                            <p class="mb-0 text-small text-muted">PRICE</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Spelt Bread</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">3 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 14.82</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Naan</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 8.97</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Cozonac</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 18.24</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Michetta</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 4.24</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Arepa</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">3 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 6.27</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Pita</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 10.97</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Zopf</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 21.24</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Kommissbrot</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">3 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 42.15</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Ruisreikäleipä</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">1 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 11.15</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Cornbread</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 35.25</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Yeast Karavai</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">5 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 63.75</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Bammy</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 13.25</p>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mb-sm-2">
+                        <div class="col-12 col-sm-6">
+                            <h6 class="mb-0">Buccellato di Lucca</h6>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <p class="mb-0 text-alternate">2 pcs</p>
+                        </div>
+                        <div class="col-12 col-sm-3 text-sm-end">
+                            <p class="mb-0 text-alternate">$ 19.50</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5 mb-5">
+                    <div class="col">
+                        <div class="separator separator-light"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col text-sm-end text-muted">
+                        <div>Subtotal :</div>
+                        <div>Tax :</div>
+                        <div>Shipping :</div>
+                        <div>Total :</div>
+                    </div>
+                    <div class="col-auto text-end">
+                        <div>$ 61.82</div>
+                        <div>$ 2.18</div>
+                        <div>$ 3.21</div>
+                        <div>$ 68.14</div>
+                    </div>
+                </div>
+
+                <div class="row mt-5 mb-5">
+                    <div class="col">
+                        <div class="separator separator-light"></div>
+                    </div>
+                </div>
+
+                <div class="text-small text-muted text-center">Invoice was
+                    created on a computer and is valid without the signature and
+                    seal.</div>
+            </div>
+        </div>
+        <!-- Standard End -->
+
+        <!-- Inline Start -->
+
+        <!-- Inline End -->
+    </div>
+</main>
+
+
+{% endblock main %}
+
+{% block SpecificScripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+    function generatePDF() {
+
+        const element = document.querySelector('.print-me');
+        html2pdf(element);
+    }
+
+</script>
+{% endblock SpecificScripts %}

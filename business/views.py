@@ -149,6 +149,30 @@ class PersonList(LoginRequiredMixin, View):
 class PersonDetail(LoginRequiredMixin,View):
     def get(self, request, pk):
         person = get_object_or_404(Person, owner=request.user, id = pk)
+        # logic here
+        
+        
+        context = {
+            "person": person
+        }
+        return render(request, "business/parteners/person_profile.html",context)
+    
+class PersonInvoice(LoginRequiredMixin,View):
+    def get(self, request, pk):
+        person = get_object_or_404(Person, owner=request.user, id = pk)
+        # logic here
+    
+        context = {
+            "person": person
+        }
+        return render(request, "business/parteners/person_invoice.html",context)
+        
+     
+
+
+class PersonEdit(LoginRequiredMixin,View):
+    def get(self, request, pk):
+        person = get_object_or_404(Person, owner=request.user, id = pk)
         form = PersonForm(instance=person)
         return render(request, "business/parteners/person_detail.html", {"form": form})
         

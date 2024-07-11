@@ -21,6 +21,8 @@ urlpatterns = [
     path("factories/", views.PersonList.as_view(), name="factories_list"),
     path("dyeing/", views.PersonList.as_view(), name="dyeing_list"),
     path("person/<pk>/", views.PersonDetail.as_view(), name="Person_detail"),
+    path("person/<pk>/invoice", views.PersonInvoice.as_view(), name="Person_invoice"),
+    path("person/<pk>/edit", views.PersonEdit.as_view(), name="person_edit"),
     path("person/<pk>/delete", views.PersonDelete.as_view(), name="person_delete"),
 
     #Sales
