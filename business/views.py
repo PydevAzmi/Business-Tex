@@ -149,11 +149,20 @@ class PersonList(LoginRequiredMixin, View):
 class PersonDetail(LoginRequiredMixin,View):
     def get(self, request, pk):
         person = get_object_or_404(Person, owner=request.user, id = pk)
-        # logic here
-        
-        
+        fabric_dyeing_inventory = FabricDyeingInventory.objects.filter(supplier=person).all()[:5]
+        fabric_inventory = FabricInventory.objects.filter(supplier=person).all()[:5]
+        yarn_inventory = YarnInventory.objects.filter(supplier=person).all()[:5]
+        sold_fabric = SoldFabric .objects.filter(customer=person).all()[:5]
+        sold_yarn = SoldYarn.objects.filter(customer=person).all()[:5]
+ 
         context = {
-            "person": person
+            "person": person,
+            "fabric_dyeing_inventory" : fabric_dyeing_inventory,
+            "fabric_inventory" : fabric_inventory,
+            "yarn_inventory" : yarn_inventory,
+            "sold_yarn" : sold_yarn,
+            "sold_fabric" : sold_fabric,
+
         }
         return render(request, "business/parteners/person_profile.html",context)
     
@@ -178,19 +187,12 @@ class PersonEdit(LoginRequiredMixin,View):
         
     def post(self, request, pk):
         person = get_object_or_404(Person, owner=request.user, id = pk)
-        role =  person.role
         form = PersonForm(request.POST, instance=person)
         if form.is_valid():
             form.save()
-            if role == "Customer" :
-                return redirect("business:customers_list")
-            elif role == "Supplier" :
-                return redirect("business:suppliers_list")
-            elif role == "Factory":
-                return redirect("business:factories_list")
-            elif role == "Dyeing Factory":
-                return redirect("business:dyeing_list")
-        return render(request, "business/parteners/person_detail.html", {"form": form})
+            return redirect("business:Person_detail", pk)
+
+        return render(request, "business/parteners/person_profile.html", {"form": form})
 
 
 class PersonDelete(LoginRequiredMixin, View):

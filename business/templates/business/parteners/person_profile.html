@@ -2,7 +2,7 @@
 {% load static %} 
 {% load crispy_forms_tags %} 
 {%block head %}
-<title>Business Tex | Profile</title>
+<title>Business Tex | {{person.name}} Profile</title>
 <link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
 
 {% endblock head %} 
@@ -50,12 +50,12 @@
                             <div class="mb-5 d-flex align-items-center flex-column">
                                 <div
                                     class="sw-6 sh-6 mb-3 d-inline-block bg-primary d-flex justify-content-center align-items-center rounded-xl">
-                                    <div class="text-white">BC</div>
+                                    <div class="text-white">{{person.name|slice:":2"|upper}}</div>
                                 </div>
-                                <div class="h5 mb-1">Blaine Cottrell</div>
+                                <div class="h5 mb-1">{{person.name}}</div>
                                 <div class="text-muted">
                                     <i data-cs-icon="pin" class="text-muted"></i>
-                                    <span class="align-middle">Montreal, Canada</span>
+                                    <span class="align-middle">{{person.address}}, {{ person.city}}</span>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
                                     <div class="col text-alternate align-middle">
-                                        Blaine Cottrell
+                                        {{person.name}}
                                     </div>
                                 </div>
                                 <div class="row g-0 mb-2">
@@ -85,8 +85,7 @@
                                         </div>
                                     </div>
                                     <div class="col text-alternate">
-                                        4 Glamis Avenue, Strathmore Park, Wellington 6022, New
-                                        Zealand
+                                        {{person.address_2}}, {{person.address}}, {{ person.city}}, {{person.country}}
                                     </div>
                                 </div>
                                 <div class="row g-0 mb-2">
@@ -95,7 +94,7 @@
                                             <i data-cs-icon="phone" class="text-primary" data-cs-size="17"></i>
                                         </div>
                                     </div>
-                                    <div class="col text-alternate">+6443884455</div>
+                                    <div class="col text-alternate">{{person.phone_number}}</div>
                                 </div>
                                 <div class="row g-0 mb-2">
                                     <div class="col-auto">
@@ -103,7 +102,7 @@
                                             <i data-cs-icon="email" class="text-primary" data-cs-size="17"></i>
                                         </div>
                                     </div>
-                                    <div class="col text-alternate">blaine@cottrell.com</div>
+                                    <div class="col text-alternate">{{person.email}}</div>
                                 </div>
                             </div>
                         </div>
@@ -114,202 +113,247 @@
 
             <div class="col-12 col-xl-8 col-xxl-9">
                 <!-- Recent Orders Start -->
-                <div class="d-flex justify-content-between">
-                    <h2 class="small-title">Recent</h2>
-                    
-                </div>
-                <div class="mb-5">
-                    <div class="card mb-2">
-                        <div class="row g-0 sh-16 sh-md-8">
-                            <div class="col">
-                                <div class="card-body pt-0 pb-0 h-100">
-                                    <div class="row g-0 h-100 align-content-center">
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
-                                            <div class="text-muted text-small d-md-none">Id</div>
-                                            <a href="Orders.Detail.html"
-                                                class="text-truncate h-100 d-flex align-items-center">1239</a>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Price</div>
-                                            <div class="text-alternate">
-                                                <span>
-                                                    <span class="text-small">$</span>
-                                                    321.75
-                                                </span>
+
+                {% if fabric_dyeing_inventory %}
+                    <div class="d-flex justify-content-between">
+                        <h2 class="small-title">Recent Dyed Fabric</h2>
+                    </div>
+                    <div class="mb-5">
+                        {% for obj in fabric_dyeing_inventory %}
+                        <div class="card mb-2">
+                            <div class="row g-0 sh-16 sh-md-8">
+                                <div class="col">
+                                    <div class="card-body pt-0 pb-0 h-100">
+                                        <div class="row g-0 h-100 align-content-center">
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
+                                                <div class="text-muted text-small d-md-none">Id</div>
+                                                <a href="{{obj.get_absolute_url}}"
+                                                    class="text-truncate h-100 d-flex align-items-center">{{obj.fabric}}</a>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Date</div>
-                                            <div class="text-alternate">13.09.2020</div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
-                                            <div class="text-muted text-small d-md-none">Status</div>
-                                            <div class="text-alternate">
-                                                <span class="badge rounded-pill bg-outline-secondary">PENDING</span>
+                                            <div
+                                                class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Price</div>
+                                                <div class="text-alternate">
+                                                    <span>
+                                                        <span class="text-small">$</span>
+                                                        {{obj.total_price}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Date</div>
+                                                <div class="text-alternate">{{obj.recieved_at|date:"D d M"}}</div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
+                                                <div class="text-muted text-small d-md-none">Status</div>
+                                                <div class="text-alternate">
+                                                    <span class="badge rounded-pill bg-outline-secondary">{{obj.status}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    <div class="card mb-2">
-                        <div class="row g-0 sh-16 sh-md-8">
-                            <div class="col">
-                                <div class="card-body pt-0 pb-0 h-100">
-                                    <div class="row g-0 h-100 align-content-center">
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
-                                            <div class="text-muted text-small d-md-none">Id</div>
-                                            <a href="Orders.Detail.html"
-                                                class="text-truncate h-100 d-flex align-items-center">1251</a>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Price</div>
-                                            <div class="text-alternate">
-                                                <span>
-                                                    <span class="text-small">$</span>
-                                                    59.00
-                                                </span>
+                {% elif fabric_inventory  %}
+                    <div class="d-flex justify-content-between">
+                        <h2 class="small-title">Recent Fabric</h2>
+                    </div>
+                    <div class="mb-5">
+                        {% for obj in fabric_inventory %}
+                        <div class="card mb-2">
+                            <div class="row g-0 sh-16 sh-md-8">
+                                <div class="col">
+                                    <div class="card-body pt-0 pb-0 h-100">
+                                        <div class="row g-0 h-100 align-content-center">
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
+                                                <div class="text-muted text-small d-md-none">Id</div>
+                                                <a href="{{obj.get_absolute_url}}"
+                                                    class="text-truncate h-100 d-flex align-items-center">{{obj.fabric}}</a>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Date</div>
-                                            <div class="text-alternate">14.09.2020</div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
-                                            <div class="text-muted text-small d-md-none">Status</div>
-                                            <div class="text-alternate">
-                                                <span class="badge rounded-pill bg-outline-primary">DELIVERED</span>
+                                            <div
+                                                class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Price</div>
+                                                <div class="text-alternate">
+                                                    <span>
+                                                        <span class="text-small">$</span>
+                                                        {{obj.total_price}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Date</div>
+                                                <div class="text-alternate">{{obj.recieved_at|date:"D d M"}}</div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
+                                                <div class="text-muted text-small d-md-none">Status</div>
+                                                <div class="text-alternate">
+                                                    <span class="badge rounded-pill bg-outline-secondary">{{obj.status}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    <div class="card mb-2">
-                        <div class="row g-0 sh-16 sh-md-8">
-                            <div class="col">
-                                <div class="card-body pt-0 pb-0 h-100">
-                                    <div class="row g-0 h-100 align-content-center">
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
-                                            <div class="text-muted text-small d-md-none">Id</div>
-                                            <a href="Orders.Detail.html"
-                                                class="text-truncate h-100 d-flex align-items-center">1397</a>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Price</div>
-                                            <div class="text-alternate">
-                                                <span>
-                                                    <span class="text-small">$</span>
-                                                    128.25
-                                                </span>
+                {% elif yarn_inventory  %}
+                    <div class="d-flex justify-content-between">
+                        <h2 class="small-title">Recent Yarn</h2>
+                    </div>
+                    <div class="mb-5">
+                        {% for obj in yarn_inventory %}
+                        <div class="card mb-2">
+                            <div class="row g-0 sh-16 sh-md-8">
+                                <div class="col">
+                                    <div class="card-body pt-0 pb-0 h-100">
+                                        <div class="row g-0 h-100 align-content-center">
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
+                                                <div class="text-muted text-small d-md-none">Id</div>
+                                                <a href="{{obj.get_absolute_url}}"
+                                                    class="text-truncate h-100 d-flex align-items-center">{{obj.yarn}}</a>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Date</div>
-                                            <div class="text-alternate">17.09.2020</div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
-                                            <div class="text-muted text-small d-md-none">Status</div>
-                                            <div class="text-alternate">
-                                                <span class="badge rounded-pill bg-outline-primary">DELIVERED</span>
+                                            <div
+                                                class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Price</div>
+                                                <div class="text-alternate">
+                                                    <span>
+                                                        <span class="text-small">$</span>
+                                                        {{obj.total_price}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Date</div>
+                                                <div class="text-alternate">{{obj.recieved_at|date:"D d M"}}</div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
+                                                <div class="text-muted text-small d-md-none">Status</div>
+                                                <div class="text-alternate">
+                                                    <span class="badge rounded-pill bg-outline-secondary">{{obj.status}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    <div class="card mb-2">
-                        <div class="row g-0 sh-16 sh-md-8">
-                            <div class="col">
-                                <div class="card-body pt-0 pb-0 h-100">
-                                    <div class="row g-0 h-100 align-content-center">
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
-                                            <div class="text-muted text-small d-md-none">Id</div>
-                                            <a href="Orders.Detail.html"
-                                                class="text-truncate h-100 d-flex align-items-center">1421</a>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Price</div>
-                                            <div class="text-alternate">
-                                                <span>
-                                                    <span class="text-small">$</span>
-                                                    252.75
-                                                </span>
+                {% elif sold_yarn %}
+                    <div class="d-flex justify-content-between">
+                        <h2 class="small-title">Recent Sold Yarn</h2>
+                    </div>
+                    <div class="mb-5">
+                        {% for obj in sold_yarn %}
+                        <div class="card mb-2">
+                            <div class="row g-0 sh-16 sh-md-8">
+                                <div class="col">
+                                    <div class="card-body pt-0 pb-0 h-100">
+                                        <div class="row g-0 h-100 align-content-center">
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
+                                                <div class="text-muted text-small d-md-none">Id</div>
+                                                <a href="{{obj.get_absolute_url}}"
+                                                    class="text-truncate h-100 d-flex align-items-center">{{obj.yarn_inventory}}</a>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Date</div>
-                                            <div class="text-alternate">17.09.2020</div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
-                                            <div class="text-muted text-small d-md-none">Status</div>
-                                            <div class="text-alternate">
-                                                <span class="badge rounded-pill bg-outline-primary">DELIVERED</span>
+                                            <div
+                                                class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Price</div>
+                                                <div class="text-alternate">
+                                                    <span>
+                                                        <span class="text-small">$</span>
+                                                        {{obj.total_price}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Date</div>
+                                                <div class="text-alternate">{{obj.sold_at|date:"D d M"}}</div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
+                                                <div class="text-muted text-small d-md-none">Status</div>
+                                                <div class="text-alternate">
+                                                    <span class="badge rounded-pill bg-outline-secondary">Sold</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    <div class="card mb-2">
-                        <div class="row g-0 sh-16 sh-md-8">
-                            <div class="col">
-                                <div class="card-body pt-0 pb-0 h-100">
-                                    <div class="row g-0 h-100 align-content-center">
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
-                                            <div class="text-muted text-small d-md-none">Id</div>
-                                            <a href="Orders.Detail.html"
-                                                class="text-truncate h-100 d-flex align-items-center">1438</a>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Price</div>
-                                            <div class="text-alternate">
-                                                <span>
-                                                    <span class="text-small">$</span>
-                                                    189.50
-                                                </span>
+                {% elif sold_fabric  %}
+                    <div class="d-flex justify-content-between">
+                        <h2 class="small-title">Recent Sold Fabric</h2>
+                    </div>
+                    <div class="mb-5">
+                        {% for obj in sold_fabric %}
+                        <div class="card mb-2">
+                            <div class="row g-0 sh-16 sh-md-8">
+                                <div class="col">
+                                    <div class="card-body pt-0 pb-0 h-100">
+                                        <div class="row g-0 h-100 align-content-center">
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
+                                                <div class="text-muted text-small d-md-none">Id</div>
+                                                <a href="{{obj.get_absolute_url}}"
+                                                    class="text-truncate h-100 d-flex align-items-center">
+                                                    {% if obj.fabric_dyeing_inventory %}
+                                                    Dyed : {{obj.fabric_dyeing_inventory}}
+                          
+                                                    {% else %}
+                                                    Raw : {{obj.Fabric_Inventory}}
+                                                    {% endif %}</a>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
-                                            <div class="text-muted text-small d-md-none">Date</div>
-                                            <div class="text-alternate">18.09.2020</div>
-                                        </div>
-                                        <div
-                                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
-                                            <div class="text-muted text-small d-md-none">Status</div>
-                                            <div class="text-alternate">
-                                                <span class="badge rounded-pill bg-outline-primary">DELIVERED</span>
+                                            <div
+                                                class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Price</div>
+                                                <div class="text-alternate">
+                                                    <span>
+                                                        <span class="text-small">$</span>
+                                                        {{obj.total_price}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                                                <div class="text-muted text-small d-md-none">Date</div>
+                                                <div class="text-alternate">{{obj.recieved_at|date:"D d M"}}</div>
+                                            </div>
+                                            <div
+                                                class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
+                                                <div class="text-muted text-small d-md-none">Status</div>
+                                                <div class="text-alternate">
+                                                    <span class="badge rounded-pill bg-outline-secondary">Sold</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                </div>
+                {% else %}
+                <h2 class="small-title">No Recent Data </h2>
+                {% endif %}
+
                 <!-- Recent Orders End -->
             </div>
         </div>
