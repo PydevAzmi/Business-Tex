@@ -1,8 +1,10 @@
 from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponseBadRequest, JsonResponse
 from .models import *
 from .forms import *
-from accounts.models import Person
+from accounts.models import Person, Company
 from django.views import View
+from django.db.models import Q, F
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
@@ -149,6 +151,7 @@ class PersonList(LoginRequiredMixin, View):
 class PersonDetail(LoginRequiredMixin,View):
     def get(self, request, pk):
         person = get_object_or_404(Person, owner=request.user, id = pk)
+
         fabric_dyeing_inventory = FabricDyeingInventory.objects.filter(supplier=person).all()[:5]
         fabric_inventory = FabricInventory.objects.filter(supplier=person).all()[:5]
         yarn_inventory = YarnInventory.objects.filter(supplier=person).all()[:5]
@@ -166,13 +169,45 @@ class PersonDetail(LoginRequiredMixin,View):
         }
         return render(request, "business/parteners/person_profile.html",context)
     
+
+
 class PersonInvoice(LoginRequiredMixin,View):
     def get(self, request, pk):
         person = get_object_or_404(Person, owner=request.user, id = pk)
-        # logic here
-    
+        company = get_object_or_404(Company, owner=request.user)
+        
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            start = request.GET.get("start")
+            end = request.GET.get("end")
+
+            fabric_dyeing_inventory = FabricDyeingInventory.objects.filter(
+                Q(supplier=person) & Q(recieved_at__range = [start, end])
+                ).all().values("fabric__name", "fabric__fabric_type", "recieved_at", "total_weight","added_tax", "discount", "unit_price", "total_price" )
+            fabric_inventory = FabricInventory.objects.filter(
+                Q(supplier=person) & Q(recieved_at__range = [start, end])
+                ).all().values("fabric__name", "fabric__fabric_type", "recieved_at", "total_weight","added_tax", "discount", "unit_price", "total_price" )
+            yarn_inventory = YarnInventory.objects.filter(
+                Q(supplier=person) & Q(recieved_at__range = [start, end])
+                ).all().values("yarn__name","yarn__yarn_type", "recieved_at", "total_weight","added_tax", "discount","added_tax", "discount", "unit_price", "total_price" )
+            sold_fabric = SoldFabric.objects.filter(
+                Q(customer=person) & Q(sold_at__range = [start, end])
+                ).all().values( "Fabric_Inventory__fabric__name", "fabric_dyeing_inventory__fabric__name", "Fabric_Inventory__fabric__fabric_type",  "fabric_dyeing_inventory__fabric__fabric_type",  "sold_at","added_tax", "discount",  "total_weight",  "unit_price",  "total_price" )
+            sold_yarn = SoldYarn.objects.filter(
+                Q(customer=person) & Q(sold_at__range = [start, end])
+                ).values("yarn_inventory__yarn__name","yarn_inventory__yarn__yarn_type", "sold_at", "total_weight","added_tax", "discount", "unit_price", "total_price" )
+
+            context = {
+                "fabric_dyeing_inventory" : list(fabric_dyeing_inventory),
+                "fabric_inventory" : list(fabric_inventory),
+                "yarn_inventory" : list(yarn_inventory),
+                "sold_yarn" : list(sold_yarn),
+                "sold_fabric" : list(sold_fabric),
+                }    
+            return JsonResponse(context)
+        
         context = {
-            "person": person
+        "person": person,
+        "company" : company,
         }
         return render(request, "business/parteners/person_invoice.html",context)
         

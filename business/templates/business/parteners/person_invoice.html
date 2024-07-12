@@ -1,11 +1,12 @@
 {% extends "base.html" %} 
+{% load tz %}  
 {% load static %} 
 {% load crispy_forms_tags %} 
 
 {%block head %}
 <title>Business Tex | Invoice</title>
 <link rel="stylesheet" href="{% static 'css/vendor/datatables.min.css' %}" />
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock head %} 
 
 {% block main %}
@@ -46,14 +47,14 @@
         </div>
         <!-- Range Start -->
         <section class="scroll-section" id="range">
-            <h2 class="small-title">Range</h2>
+            <h2 class="small-title">Report Scope</h2>
             <div class="card mb-5">
                 <div class="card-body">
                 <label class="form-label">Date</label>
                 <div class="input-daterange input-group" id="datePickerRange">
-                    <input type="text" class="form-control" name="start" placeholder="Start" />
+                    <input type="text" class="form-control" name="start" id="start" placeholder="Start" />
                     <span class="mx-2"></span>
-                    <input type="text" class="form-control" name="end" placeholder="End" />
+                    <input type="text" class="form-control" name="end" id ="end" placeholder="End" />
                 </div>
                 </div>
             </div>
@@ -64,19 +65,18 @@
         <!-- Standard Start -->
         <!-- card-print: removes shadow, margin and padding  -->
         <!-- print-me: removes everyting from main .container except the element with the class -->
-        <h2 class="small-title">Standard</h2>
+        <h2 class="small-title">Invoice</h2>
         <div class="card mb-5 card-print print-me">
             <div class="card-body">
                 <div class="row d-flex flex-row align-items-center">
                     <div class="col-12 col-md-6">
-                        <img src="{% static 'img/logo/logo-blue-light.svg' %}" class="sw-17"
+                        <img src="{{company.logo.url}}" class="sw-15"
                             alt="logo" />
                     </div>
                     <div class="col-12 col-md-6 text-end">
-                        <div class="mb-2">ColoredStrategies Inc</div>
-                        <div class="text-small text-muted">4 Glamis Avenue,
-                            Strathmore Park, Wellington 6022, New Zealand</div>
-                        <div class="text-small text-muted">+6443884455</div>
+                        <div class="mb-2">{{company.name}}</div>
+                        <div class="text-small text-muted">{{company.address_2}}, {{company.address}}, {{company.city}}, {{company.country}}</div>
+                        <div class="text-small text-muted">{{company.phone_number}}</div>
                     </div>
                 </div>
                 <div class="row mt-5 mb-5">
@@ -87,176 +87,176 @@
                 <div class="row g-1 mb-5">
                     <div class="col-12 col-md-8">
                         <div class="py-3">
-                            <div>Blaine Cottrell</div>
-                            <div>55 Esk Street, Invercargill 55555550, New
-                                Zealand</div>
+                            <div>{{person.name}}</div>
+                            <div>{{person.address_2}}, {{person.address}}, {{person.city}}, {{person.country}}</div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
                         <div class="py-3 text-md-end">
-                            <div>Invoice #: 741</div>
-                            <div>02.02.2019</div>
+                            <div></div>
+                            <div>{% now "Y-m-d" %}</div>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <div class="row mb-4 d-none d-sm-flex">
-                        <div class="col-6">
-                            <p class="mb-0 text-small text-muted">ITEM NAME</p>
-                        </div>
-                        <div class="col-3">
-                            <p class="mb-0 text-small text-muted">COUNT</p>
-                        </div>
-                        <div class="col-3 text-end">
-                            <p class="mb-0 text-small text-muted">PRICE</p>
-                        </div>
+        <div>
+            <div>
+                <div class="row mb-4 d-none d-sm-flex">
+                    <div class="col-2">
+                    <p class="mb-0 text-small text-muted">ITEM</p>
+                    </div>
+                    <div class="col-2">
+                    <p class="mb-0 text-small text-muted">TYPE</p>
+                    </div>
+                    <div class="col-2">
+                    <p class="mb-0 text-small text-muted">WEIGTH</p>
+                    </div>
+                    <div class="col-2">
+                    <p class="mb-0 text-small text-muted">TIME</p>
                     </div>
 
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Spelt Bread</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">3 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 14.82</p>
-                        </div>
+                    <div class="col-2 text-end">
+                    <p class="mb-0 text-small text-muted">UNIT PRICE</p>
                     </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Naan</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 8.97</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Cozonac</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 18.24</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Michetta</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 4.24</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Arepa</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">3 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 6.27</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Pita</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 10.97</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Zopf</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 21.24</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Kommissbrot</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">3 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 42.15</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Ruisreikäleipä</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">1 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 11.15</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Cornbread</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 35.25</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Yeast Karavai</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">5 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 63.75</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Bammy</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 13.25</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4 mb-sm-2">
-                        <div class="col-12 col-sm-6">
-                            <h6 class="mb-0">Buccellato di Lucca</h6>
-                        </div>
-                        <div class="col-12 col-sm-3">
-                            <p class="mb-0 text-alternate">2 pcs</p>
-                        </div>
-                        <div class="col-12 col-sm-3 text-sm-end">
-                            <p class="mb-0 text-alternate">$ 19.50</p>
-                        </div>
+                    <div class="col-2 text-end">
+                    <p class="mb-0 text-small text-muted">TOTAL PRICE</p>
                     </div>
                 </div>
+                <div id="results">
+                    {% if fabric_dyeing_inventory %}
+                        {% for obj in fabric_dyeing_inventory %}
+                            <div class="row mb-4 mb-sm-2">
+                                <div class="col-12 col-sm-2">
+                                    <h6 class="mb-0 ">{{obj.fabric}}</h6>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">dyed Fabric</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.total_weight}} kg</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.recieved_at|date:"D d M"}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 text-alternate">$ {{obj.unit_price}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 ">$ {{obj.total_price}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if fabric_inventory  %}
+                        {% for obj in fabric_inventory %}
+                            <div class="row mb-4 mb-sm-2">
+                                <div class="col-12 col-sm-2">
+                                    <h6 class="mb-0 ">{{obj.fabric}}</h6>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">Raw Fabric</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.total_weight}} kg</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.recieved_at|date:"D d M"}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 text-alternate">$ {{obj.unit_price}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 ">$ {{obj.total_price}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if yarn_inventory  %}
+                        {% for obj in yarn_inventory %}
+                            <div class="row mb-4 mb-sm-2">
+                                <div class="col-12 col-sm-2">
+                                    <h6 class="mb-0 ">{{obj.yarn}}</h6>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">Raw Yarn</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.total_weight}} kg</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.recieved_at|date:"D d M"}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 text-alternate">$ {{obj.unit_price}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 ">$ {{obj.total_price}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if sold_yarn %}
+                        {% for obj in sold_yarn %}
+                            <div class="row mb-4 mb-sm-2">
+                                <div class="col-12 col-sm-2">
+                                    <h6 class="mb-0 ">{{obj.yarn_inventory.yarn}}</h6>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">Sold Yarn</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.total_weight}} kg</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.sold_at|date:"D d M"}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 text-alternate">$ {{obj.unit_price}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 ">$ {{obj.total_price}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if sold_fabric  %}
+                        {% for obj in sold_fabric %}
+                            <div class="row mb-4 mb-sm-2">
+                                <div class="col-12 col-sm-2">
+                                    <h6 class="mb-0 ">
+                                        {% if obj.fabric_dyeing_inventory %}
+                                        Dyed : {{obj.fabric_dyeing_inventory.fabric}}
+
+                                        {% else %}
+                                        Raw : {{obj.Fabric_Inventory.fabric}}
+                                        {% endif %}
+                                    </h6>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">Sold Fabric</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.total_weight}} kg</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">{{obj.sold_at|date:"D d M"}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 text-alternate">$ {{obj.unit_price}}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 ">$ {{obj.total_price}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
 
                 <div class="row mt-5 mb-5">
                     <div class="col">
@@ -271,11 +271,8 @@
                         <div>Shipping :</div>
                         <div>Total :</div>
                     </div>
-                    <div class="col-auto text-end">
-                        <div>$ 61.82</div>
-                        <div>$ 2.18</div>
-                        <div>$ 3.21</div>
-                        <div>$ 68.14</div>
+                    <div  id="status" class="col-auto text-end">
+
                     </div>
                 </div>
 
@@ -290,11 +287,6 @@
                     seal.</div>
             </div>
         </div>
-        <!-- Standard End -->
-
-        <!-- Inline Start -->
-
-        <!-- Inline End -->
     </div>
 </main>
 
@@ -302,15 +294,86 @@
 {% endblock main %}
 
 {% block SpecificScripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 <script>
-    function generatePDF() {
+    function filterModels() {
+        $.ajax({
+            type: 'GET',
+            url: '{% url "business:Person_invoice" person.id %}',
+            headers: {
+               "X-Requested-With": "XMLHttpRequest",
+            },
+            data: {
+                'start': $('#start').val(),
+                'end': $('#end').val()
+            },
+            success: function(response) {
+                $('#results').empty();
+                var total = 0;
+                var tex = 0;
+                var discount = 0 ; 
+                function renderInventory(inventory, type){
 
-        const element = document.querySelector('.print-me');
-        html2pdf(element);
+                    inventory.forEach(function(item) {
+                        total +=  parseFloat(item.total_price);
+                        discount += parseFloat(item.discount);
+                        tex += parseFloat(item.added_tax);
+                        $('#results').append(
+                            `<div class="row mb-4 mb-sm-2">
+                                <div class="col-12 col-sm-2">
+                                    <h6 class="mb-0 ">${ item.fabric__name || item.yarn__name || item.yarn_inventory__yarn__name || item.Fabric_Inventory__fabric__name || item.fabric_dyeing_inventory__fabric__name }
+                                    ${ item.fabric__fabric_type || item.yarn__yarn_type || item.yarn_inventory__yarn__yarn_type || item.Fabric_Inventory__fabric__fabric_type || item.fabric_dyeing_inventory__fabric__fabric_type}
+                                    </h6>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">${type}</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">${item.total_weight} kg</p>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <p class="mb-0 text-alternate">${new Date(item.recieved_at || item.sold_at).toDateString()}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 text-alternate">$ ${item.unit_price}</p>
+                                </div>
+                                <div class="col-12 col-sm-2 text-sm-end">
+                                    <p class="mb-0 ">$ ${item.total_price}</p>
+                                </div>
+                            </div>`
+                        );
+                    });
+                    $('#status').empty();
+                    $('#status').append(`                        
+                        <div>$ ${discount}</div>
+                        <div>$ ${tex}</div>
+                        <div>$ 0</div>
+                        <div>$ ${total}</div>`
+                    )
+
+                }
+
+                
+                renderInventory(response.fabric_dyeing_inventory, 'Dyed Fabric');
+                renderInventory(response.fabric_inventory, 'Raw Fabric');
+                renderInventory(response.yarn_inventory, 'Raw Yarn');
+                renderInventory(response.sold_fabric, 'Sold Fabric');
+                renderInventory(response.sold_yarn, 'Sold Yarn');
+
+            },
+            error: function(response) {
+                console.log("response error")
+            }
+        });
     }
+
+    // Trigger AJAX request when end date is selected
+    $('#end').on('change', function() {
+        if ($('#start').val() && $('#end').val()) {
+            filterModels();
+        }
+    });
 
 </script>
 {% endblock SpecificScripts %}

@@ -160,7 +160,9 @@
                         </div>
                         {% endfor %}
                     </div>
-                {% elif fabric_inventory  %}
+                {% endif %}
+
+                {% if fabric_inventory  %}
                     <div class="d-flex justify-content-between">
                         <h2 class="small-title">Recent Fabric</h2>
                     </div>
@@ -206,7 +208,10 @@
                         </div>
                         {% endfor %}
                     </div>
-                {% elif yarn_inventory  %}
+                {% endif %}
+
+                {% if yarn_inventory  %}
+
                     <div class="d-flex justify-content-between">
                         <h2 class="small-title">Recent Yarn</h2>
                     </div>
@@ -252,7 +257,9 @@
                         </div>
                         {% endfor %}
                     </div>
-                {% elif sold_yarn %}
+                {% endif %}
+
+                {% if sold_yarn %}
                     <div class="d-flex justify-content-between">
                         <h2 class="small-title">Recent Sold Yarn</h2>
                     </div>
@@ -298,7 +305,9 @@
                         </div>
                         {% endfor %}
                     </div>
-                {% elif sold_fabric  %}
+                {% endif %}
+
+                {% if sold_fabric  %}
                     <div class="d-flex justify-content-between">
                         <h2 class="small-title">Recent Sold Fabric</h2>
                     </div>
@@ -319,7 +328,8 @@
                           
                                                     {% else %}
                                                     Raw : {{obj.Fabric_Inventory}}
-                                                    {% endif %}</a>
+                                                    {% endif %}
+                                                </a>
                                             </div>
                                             <div
                                                 class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
@@ -334,7 +344,7 @@
                                             <div
                                                 class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
                                                 <div class="text-muted text-small d-md-none">Date</div>
-                                                <div class="text-alternate">{{obj.recieved_at|date:"D d M"}}</div>
+                                                <div class="text-alternate">{{obj.sold_at|date:"D d M"}}</div>
                                             </div>
                                             <div
                                                 class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
@@ -350,8 +360,6 @@
                         </div>
                         {% endfor %}
                     </div>
-                {% else %}
-                <h2 class="small-title">No Recent Data </h2>
                 {% endif %}
 
                 <!-- Recent Orders End -->
